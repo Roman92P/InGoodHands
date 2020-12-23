@@ -8,22 +8,37 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
   </head>
   <body>
-  <div th:insert="fragments/header"></div>
+  <header class="header--form-page">
+    <div th:insert="fragments/header"></div>
+  </header>
     <section class="login-page">
       <h2>Załóż konto</h2>
-      <form>
+      <form th:action="@{/register}" th:object="${newUser}" method="post">
         <div class="form-group">
-          <input type="email" name="email" placeholder="Email" />
+          <label th:for="*{userEmail}">
+            <input type="email" name="email" placeholder="Email" th:field="*{userEmail}"/>
+          </label>
         </div>
         <div class="form-group">
-          <input type="password" name="password" placeholder="Hasło" />
+          <label th:for="*{password}">
+            <input type="password" name="password" placeholder="Hasło" th:field="*{password}"/>
+          </label>
         </div>
         <div class="form-group">
           <input type="password" name="password2" placeholder="Powtórz hasło" />
         </div>
-
+        <div class="form-group">
+          <label th:for="*{userName}">
+            <input type="text" name="userName" placeholder="imię" th:field="*{userName}"/>
+          </label>
+        </div>
+        <div class="form-group">
+          <label th:for="*{userLastname}">
+            <input type="text" name="userName" placeholder="imię" th:field="*{userLastname}"/>
+          </label>
+        </div>
         <div class="form-group form-group--buttons">
-          <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
+          <a th:href="@{/}" class="btn btn--without-border">Zaloguj się</a>
           <button class="btn" type="submit">Załóż konto</button>
         </div>
       </form>

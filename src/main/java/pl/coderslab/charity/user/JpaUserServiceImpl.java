@@ -23,7 +23,7 @@ public class JpaUserServiceImpl implements UserService {
 
     @Override
     public User findByUserName(String name) {
-        return null;
+        return userRepository.findByUserName(name);
     }
 
     @Override
@@ -33,5 +33,10 @@ public class JpaUserServiceImpl implements UserService {
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         userRepository.save(user);
+    }
+
+    @Override
+    public User findByUserEmail(String email) {
+        return userRepository.findByUserEmail(email);
     }
 }

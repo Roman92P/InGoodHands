@@ -6,3 +6,7 @@ INSERT INTO categories(category_name) VALUES ('Ubrania');
 INSERT INTO categories(category_name) VALUES ('Zabawki');
 INSERT INTO categories(category_name) VALUES ('Książki');
 INSERT INTO categories(category_name) VALUES ('AGD');
+INSERT INTO roles(role_id,role_name)VALUES(1,'ROLE_ADMIN');
+INSERT INTO roles(role_id, role_name)VALUES(2,'ROLE_USER');
+INSERT INTO users(user_id,is_enabled, user_password, user_email, user_lastname, user_name) VALUES (1,true, '$2a$10$k0OSEhlDpbunl85TcSj.zOuUHuywvh/xKTJeUSih9j/slwqS7sxaa', 'admin@admin','Admin', 'Admin');
+INSERT INTO user_role(user_id, role_id) VALUES (1,1);
