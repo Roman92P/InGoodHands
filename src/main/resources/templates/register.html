@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-  </head>
-  <body>
-  <header class="header--form-page">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header class="header--form-page">
     <div th:insert="fragments/header"></div>
-  </header>
-    <section class="login-page">
-      <h2>Załóż konto</h2>
-      <form th:action="@{/register}" th:object="${newUser}" method="post">
+</header>
+<section class="login-page">
+    <h2>Załóż konto</h2>
+    <form th:action="@{/register}" th:object="${newUser}" method="post">
         <div class="form-group">
-          <label th:for="*{userEmail}">
-            <input type="email" name="email" placeholder="Email" th:field="*{userEmail}"/>
-          </label>
+            <label th:for="*{userEmail}">
+                <input type="email" name="email" placeholder="Email" th:field="*{userEmail}"/>
+            </label>
         </div>
         <div class="form-group">
-          <label th:for="*{password}">
-            <input type="password" name="password" placeholder="Hasło" th:field="*{password}"/>
-          </label>
+            <label th:for="*{password}">
+                <input id="password" type="password" name="password" placeholder="Hasło" th:field="*{password}"/>
+            </label>
         </div>
         <div class="form-group">
-          <input type="password" name="password2" placeholder="Powtórz hasło" />
+            <input id="passwordRep" type="password" name="password2" placeholder="Powtórz hasło"/>
         </div>
         <div class="form-group">
-          <label th:for="*{userName}">
-            <input type="text" name="userName" placeholder="First Name" th:field="*{userName}"/>
-          </label>
+            <label th:for="*{userName}">
+                <input type="text" name="userName" placeholder="First Name" th:field="*{userName}"/>
+            </label>
         </div>
         <div class="form-group">
-          <label th:for="*{userLastname}">
-            <input type="text" name="userName" placeholder="Last Name" th:field="*{userLastname}"/>
-          </label>
+            <label th:for="*{userLastname}">
+                <input type="text" name="userName" placeholder="Last Name " th:field="*{userLastname}"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <span id="passwordMessage"></span>
         </div>
         <div class="form-group form-group--buttons">
-          <a th:href="@{/}" class="btn btn--without-border">Zaloguj się</a>
-          <button class="btn" type="submit">Załóż konto</button>
+            <a  th:href="@{/}" class="btn btn--without-border">Zaloguj się</a>
+            <button id="loginButton" class="btn" type="submit" style="display: none">Załóż konto</button>
         </div>
-      </form>
-    </section>
-    <div th:insert="fragments/footer"></div>
-  </body>
+        <ul th:if="${#fields.hasErrors('*')}" style="color: crimson; size: landscape">
+            <li class="text-danger" th:each="err : ${#fields.errors('*')}"
+                th:text="${err}">Input is incorrect
+            </li>
+        </ul>
+    </form>
+</section>
+<div th:insert="fragments/footer"></div>
+<script th:src="@{/js/checkPassword.js}"></script>
+</body>
 </html>

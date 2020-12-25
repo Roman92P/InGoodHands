@@ -23,7 +23,7 @@
 
         <div th:if="${#authorization?.expression('isAnonymous()')}">
             <ul class="nav--actions">
-                <li><a th:href="@{/}">Zaloguj</a></li>
+                <li><a th:href="@{/login}">Zaloguj</a></li>
                 <li class="highlighted"><a th:href="@{/register}">Załóż konto</a></li>
             </ul>
         </div>
@@ -33,6 +33,7 @@
             <li><a th:href="@{/home/#steps}" class="btn btn--without-border">O co chodzi?</a></li>
             <li><a th:href="@{/home/#about-us}" class="btn btn--without-border">O nas</a></li>
             <li><a th:href="@{/home/#help}" class="btn btn--without-border">Fundacje i organizacje</a></li>
+            <li><a th:href="@{/admin}" class="btn btn--without-border">Panel Admina</a></li>
             <div sec:authorize="isAuthenticated()">
                 <li><a th:href="@{/donations}" class="btn btn--without-border">Przekaż dary</a></li>
             </div>

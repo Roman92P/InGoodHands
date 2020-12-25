@@ -7,6 +7,7 @@ import pl.coderslab.charity.model.User;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class JpaUserServiceImpl implements UserService {
@@ -38,5 +39,10 @@ public class JpaUserServiceImpl implements UserService {
     @Override
     public User findByUserEmail(String email) {
         return userRepository.findByUserEmail(email);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+       return userRepository.findAll();
     }
 }

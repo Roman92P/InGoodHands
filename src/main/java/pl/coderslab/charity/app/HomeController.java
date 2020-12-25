@@ -27,7 +27,7 @@ public class HomeController {
         this.institutionService = institutionService;
         this.donationService = donationService;
     }
-    @RequestMapping("/")
+    @RequestMapping("/login")
     public String permitAllView(){
         return "login";
     }
@@ -35,12 +35,9 @@ public class HomeController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login( CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
-        logger.debug(user.getUserName());
-
         if (user.isEnabled()) {
-            return "redirect:/home";
+            return "redirect:/donations";
         }
-        model.addAttribute("noActiveUser", "User is not activated. Check your email!");
         return "login";
     }
 
