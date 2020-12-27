@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header class="header--main-page">
+    <div th:insert="fragments/header"></div>
+</header>
+<section class="login-page">
+    <h1>Coś poszło nie tak</h1>
+    <h1><span th:text="${exception}"></span></h1>
+    <h1><span th:text="${url}"></span></h1>
+    <h1><span th:text="${errorMessage}"></span></h1>
+</section>
+<div th:insert="fragments/footer"></div>
+</body>
+</html>

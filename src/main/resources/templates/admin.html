@@ -23,17 +23,91 @@
 <section id="help" class="help">
     <h2>Lista instytucji</h2>
     <div class="help--slides active" data-id="1">
-        <p>Poziżej lista wszystkich instytucji</p>
+        <p>Poniżej lista wszystkich instytucji</p>
         <ul class="help--slides-items" th:each="institution,index : ${allInstitutions}">
             <div th:if="${index.odd}">
                 <li>
                     <div class="col">
-                        <div class="title"><span th:text="${institution.name}"></span></div>
-                        <div class="subtitle"><span th:text="${institution.description}"></span></div>
+                        <div class="row">
+                            <div class="title"><span th:text="${institution.name}"></span></div>
+                            <div class="subtitle"><span th:text="${institution.description}"></span></div>
+                        </div>
+                        <div class="row">
+                            <a class="title" th:href="@{/institution/remove/{id}(id=${institution.id})}" role="button">Usuń</a>
+                            <a class="title" th:href="@{/institution/edit/{id}(id=${institution.id})}" role="button">Edytuj</a>
+                        </div>
+                    </div>
+                    <div th:if="${allInstitutions.size()>index.index+1}">
+                        <div class="col">
+                            <div class="row">
+                                <div class="title"><span th:text="${allInstitutions[index.index+1].name}"></span></div>
+                                <div class="subtitle"><span
+                                        th:text="${allInstitutions[index.index+1].description}"></span></div>
+                            </div>
+                            <div class="row">
+                                <a class="title"
+                                   th:href="@{/institution/remove/{id}(id=${allInstitutions[index.index+1].id})}"
+                                   role="button">Usuń</a>
+                                <a class="title"
+                                   th:href="@{/institution/edit/{id}(id=${allInstitutions[index.index+1].id})}"
+                                   role="button">Edytuj</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+    </div>
+    <h2>Lista użytkowników</h2>
+    <div class="help--slides active" data-id="1">
+        <p>Poniżej lista wszystkich użytkowników</p>
+        <ul class="help--slides-items" th:each="user,index : ${allUsers}">
+            <div th:if="${index.odd}">
+                <li>
+                    <div class="col">
+                        <div class="row">
+                            <div class="title"><span th:text="${user.userName}"></span></div>
+                            <div class="subtitle"><span th:text="${user.userEmail}"></span></div>
+                        </div>
+                        <div class="row">
+                            <a class="subtitle"
+                               th:href="@{/user/details/{id}(id=${user.id})}"
+                               role="button">Szczegóły</a>
+                        </div>
                     </div>
                     <div class="col">
-                        <div class="title"><span th:text="${allInstitutions[index.index+1].name}"></span></div>
-                        <div class="subtitle"><span th:text="${allInstitutions[index.index+1].description}"></span>
+                        <div class="row">
+                            <div th:if="${allUsers.size()>index.index+1}">
+                                <div class="title"><span th:text="${allUsers[index.index+1].userName}"></span></div>
+                                <div class="subtitle"><span th:text="${allUsers[index.index+1].userEmail}"></span></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <a class="subtitle"
+                               th:href="@{/user/details/{id}(id=${allUsers[index.index+1].id})}"
+                               role="button">Szczegóły</a>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+    </div>
+    <h2>Lista darowizn</h2>
+    <div class="help--slides active" data-id="1">
+        <p>Poniżej lista wszystkich darowizn</p>
+        <ul class="help--slides-items" th:each="donation,index : ${allDonations}">
+            <div th:if="${index.odd}">
+                <li>
+                    <div class="col">
+                        <div class="title"><span th:text="${donation.pickUpDate}"></span></div>
+                        <div class="subtitle"><span th:text="${donation.institution.name}"></span></div>
+                    </div>
+                    <div th:if="${allDonations.size()>index.index+1}">
+                        <div class="col">
+                            <div class="title"><span th:text="${allDonations[index.index+1].pickUpDate}"></span></div>
+                            <div class="subtitle"><span
+                                    th:text="${allDonations[index.index+1].institution.name}"></span>
+                            </div>
                         </div>
                     </div>
                 </li>

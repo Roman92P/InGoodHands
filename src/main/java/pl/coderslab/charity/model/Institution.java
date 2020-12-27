@@ -1,6 +1,8 @@
 package pl.coderslab.charity.model;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "institutions")
@@ -16,6 +18,9 @@ public class Institution {
 
     @Column(name = "institution_description")
     private String description;
+
+    @OneToMany(mappedBy = "institution",cascade = CascadeType.ALL)
+    private Set<Donation>donations;
 
     public Long getId() {
         return id;
