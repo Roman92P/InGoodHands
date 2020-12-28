@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+<header class="header--main-page">
+    <div th:insert="fragments/header"></div>
+</header>
+<section id="help" class="help">
+    <h2>Szczegóły darowizny użytkownika<span th:text="${donation.user.userName}" style="margin-left: 2%"></span></h2>
+        <div class="help--slides active">
+            <h2>Dla organizacji:</h2>
+            <p><span th:text="${donation.institution.name}"></span></p>
+        </div>
+        <div class="help--slides active">
+            <h2>Ilość worków:</h2>
+            <p><span th:text="${donation.quantity}"></span></p>
+        </div>
+        <div class="help--slides active">
+            <h2>Kategorie:</h2>
+            <div th:each="category:${donation.getCategories()}">
+                <p><span th:text="${category.name}"></span></p>
+            </div>
+        </div>
+        <div class="help--slides active">
+            <h2>Dane adresowe:</h2>
+            <p><span th:text="${donation.city}"></span></p>
+            <p><span th:text="${donation.zipCode}"></span></p>
+            <p><span th:text="${donation.street}"></span></p>
+            <p><span th:text="${donation.phoneNumber}"></span></p>
+            <h2>Data i czas odbioru:</h2>
+            <p><span th:text="${donation.pickUpDate}"></span></p>
+            <p><span th:text="${donation.pickUpTime}"></span></p>
+            <h2>Użytkownik:</h2>
+            <p><span th:text="${donation.user.userName}"></span></p>
+            <p><span th:text="${donation.user.userEmail}"></span></p>
+        </div>
+    </section>
+    <div class="form-group form-group--buttons">
+        <button onclick="goBack()"  class="btn">Powrót</button>
+    </div>
+<div th:insert="fragments/footer"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

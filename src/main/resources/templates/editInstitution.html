@@ -14,7 +14,7 @@
 <section id="help" class="help">
     <h2>Edytuj instytucję o nazwie<span th:text="${institution.name}" style="margin-left: 2%"></span></h2>
     <div class="help--slides active" data-id="1">
-        <form th:action="@{/institution/edit}" th:object="${institution}" method="post">
+        <form th:action="@{/admin/institution/edit}" th:object="${institution}" method="post">
             <label th:for="*{id}">
                 <input hidden th:attr="name='id'" th:value="${institution.id}">
             </label>

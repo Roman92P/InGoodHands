@@ -17,7 +17,7 @@ public class JpaDonationServiceImpl implements DonationService {
 
     @Override
     public Optional<Donation> getDonation(Long id) {
-        return Optional.empty();
+        return donationRepository.findById(id);
     }
 
     @Override

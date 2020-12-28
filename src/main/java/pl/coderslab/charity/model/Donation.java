@@ -26,6 +26,10 @@ public class Donation {
     private Set<Category> categories = new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
     @JoinColumn(name = "institution_id")
     private Institution institution;
 
@@ -50,7 +54,7 @@ public class Donation {
     @Column(name="phone_number")
     private String phoneNumber;
 
-    public Donation(Long id, int quantity, Set<Category> categories, Institution institution, String street, String city, String zipCode, LocalDate pickUpDate, LocalTime pickUpTime, String pickUpComment, String phoneNumber) {
+    public Donation(Long id, int quantity, Set<Category> categories, Institution institution, String street, String city, String zipCode, LocalDate pickUpDate, LocalTime pickUpTime, String pickUpComment, String phoneNumber, User user) {
         this.id = id;
         this.quantity = quantity;
         this.categories = categories;
@@ -62,10 +66,13 @@ public class Donation {
         this.pickUpTime = pickUpTime;
         this.pickUpComment = pickUpComment;
         this.phoneNumber = phoneNumber;
+        this.user = user;
     }
 
     public Donation() {
     }
+
+
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -154,5 +161,13 @@ public class Donation {
 
     public void setPickUpComment(String pickUpComment) {
         this.pickUpComment = pickUpComment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
