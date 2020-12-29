@@ -5,8 +5,8 @@
                 <li class="logged-user">
                     Witaj [[${#httpServletRequest.remoteUser}]]!
                     <ul class="dropdown">
-                        <li><a href="#">Profil</a></li>
-                        <li><a href="#">Moje zbiórki</a></li>
+                        <li><a th:href="@{/user/profile}">Profil</a></li>
+                        <li><a th:href="@{/user/donations}">Moje zbiórki</a></li>
                         <li>
                             <form th:action="@{/logout}" method="post">
                                 <input style="border: 0;

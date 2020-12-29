@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.coderslab.charity.model.User;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class SpringDataUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userService.findByUserName(username);
+        User user = userService.findByUserName(username).orElseThrow(EntityNotFoundException::new);
         if (user == null) {throw new UsernameNotFoundException(username); }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getRoles().forEach(r ->
@@ -31,4 +32,5 @@ public class SpringDataUserDetailsService implements UserDetailsService {
         return new CurrentUser(user.getUserName(),user.getPassword(),
                 grantedAuthorities, user);
     }
+
 }

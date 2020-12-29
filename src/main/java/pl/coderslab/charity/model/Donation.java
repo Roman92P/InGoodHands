@@ -54,7 +54,15 @@ public class Donation {
     @Column(name="phone_number")
     private String phoneNumber;
 
-    public Donation(Long id, int quantity, Set<Category> categories, Institution institution, String street, String city, String zipCode, LocalDate pickUpDate, LocalTime pickUpTime, String pickUpComment, String phoneNumber, User user) {
+    @Column(name = "created_on")
+    private LocalDate createdOn;
+
+    @PrePersist
+    public void prePersist() {
+        createdOn = LocalDate.now();
+    }
+
+    public Donation(Long id, int quantity, Set<Category> categories, Institution institution, String street, String city, String zipCode, LocalDate pickUpDate, LocalTime pickUpTime, String pickUpComment, String phoneNumber, User user, LocalDate createdOn) {
         this.id = id;
         this.quantity = quantity;
         this.categories = categories;
@@ -67,12 +75,23 @@ public class Donation {
         this.pickUpComment = pickUpComment;
         this.phoneNumber = phoneNumber;
         this.user = user;
+        this.createdOn=createdOn;
     }
 
     public Donation() {
     }
 
+    public void setPickUpDate(LocalDate pickUpDate) {
+        this.pickUpDate = pickUpDate;
+    }
 
+    public LocalDate getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

@@ -21,4 +21,5 @@ public class CurrentUser extends User {
     public boolean isEnabled() {
         return this.user.isEnabled();
     }
+
 }

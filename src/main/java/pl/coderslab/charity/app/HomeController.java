@@ -27,6 +27,12 @@ public class HomeController {
         this.institutionService = institutionService;
         this.donationService = donationService;
     }
+
+    @RequestMapping("/")
+    public String home(){
+        return "redirect:/home";
+    }
+
     @RequestMapping("/login")
     public String permitAllView(){
         return "login";

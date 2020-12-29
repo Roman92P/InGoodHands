@@ -24,7 +24,7 @@ public class JpaUserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String name) {
+    public Optional<User> findByUserName(String name) {
         return userRepository.findByUserName(name);
     }
 

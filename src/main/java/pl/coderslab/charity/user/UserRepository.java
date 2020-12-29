@@ -5,9 +5,10 @@ import pl.coderslab.charity.model.Role;
 import pl.coderslab.charity.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserName(String username);
+    Optional<User> findByUserName(String username);
     User findByUserEmail(String userEmail);
 
     List<User> findAllByRolesEquals(Role userRole);

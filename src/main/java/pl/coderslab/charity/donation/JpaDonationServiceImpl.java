@@ -3,6 +3,9 @@ package pl.coderslab.charity.donation;
 import org.springframework.stereotype.Service;
 import pl.coderslab.charity.model.Donation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +51,21 @@ public class JpaDonationServiceImpl implements DonationService {
     @Override
     public Optional<Integer> getSumOfDonations() {
         return donationRepository.getSumOfDonations();
+    }
+
+    @Override
+    public List<Donation> usersDonations(Long id) {
+        return donationRepository.findAllByUserId(id);
+    }
+
+    @Override
+    public List<Donation> usersNotCollected(LocalDate day1, LocalDate day2, LocalTime time) {
+        return donationRepository.allNotCollected(day1, day2,time);
+    }
+
+    @Override
+    public List<Donation> usersCollected(LocalDate day1, LocalDate day2, LocalTime time) {
+        return donationRepository.allCollected(day1, day2, time);
     }
 
 }
