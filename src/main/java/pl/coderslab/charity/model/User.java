@@ -23,10 +23,10 @@ public class User {
     private Long id;
 
     @Size(min = 2, max = 15, message = "Imię użytkownika nie może być pusta")
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
 
-    @Size(min = 2, max = 15, message = "Nzwisko użytkownika nie może być puste")
+    @Size(min = 2, max = 15, message = "Nazwisko użytkownika nie może być puste")
     @Column(name = "user_lastname")
     private String userLastname;
 

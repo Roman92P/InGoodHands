@@ -32,8 +32,10 @@ public class JpaUserServiceImpl implements UserService {
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        if (user.getRoles().size()==0) {
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        }
         userRepository.save(user);
     }
 
@@ -54,6 +56,14 @@ public class JpaUserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        Optional<User> byId = userRepository.findById(user.getId());
+        if(byId.isPresent()){
+            User user1 = byId.get();
+            String password = user1.getPassword();
+            if(!password.equals(user.getPassword())){
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+        }
         userRepository.save(user);
     }
 

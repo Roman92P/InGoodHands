@@ -21,7 +21,10 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -156,7 +159,58 @@ public class AdminController {
     @RequestMapping("/adminList")
     public String getAdminList(Model model){
         model.addAttribute("admins", userService.findAllAdmins());
+        model.addAttribute("user", new User());
         return "adminList";
     }
 
+    @RequestMapping("/edit/{id}")
+    public String editAdminUser(@PathVariable Long id, Model model){
+        User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
+        model.addAttribute("user", user);
+        return "editAdminUser";
+    }
+
+    @PostMapping("/edit")
+    public String editAdminUser(@Valid User user, BindingResult result, Model model){
+        if(result.hasErrors()){
+            model.addAttribute("admins", userService.findAllAdmins());
+            return "adminList";
+        }
+        userService.updateUser(user);
+        return "redirect:/admin/adminList";
+    }
+
+    @RequestMapping("/delete/{id}")
+    public String deleteAdmin(@PathVariable Long id, Model model, Principal principal){
+        String name = principal.getName();
+        User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
+        String userName = user.getUserName();
+        if(userName.equals(name)||userName.equals("Admin")){
+            model.addAttribute("adminDeleteMessage", "You cann't delete Admin or current logged user");
+            model.addAttribute("admins", userService.findAllAdmins());
+            return "adminList";
+        }
+        userService.deleteUser(user);
+        return "redirect:/admin/adminList";
+    }
+
+    @RequestMapping("/addNewAdmin")
+    public String adminAddNewAdmin(Model model){
+        User user = new User();
+        model.addAttribute("newAdmin", user);
+        return "adminAddNewAdmin";
+    }
+
+    @PostMapping("/addNewAdmin")
+    public String adminAddNewAdmin(@Valid @ModelAttribute("newAdmin") User user, BindingResult result){
+        if(result.hasErrors()){
+            return "adminAddNewAdmin";
+        }
+        Set<Role> userRoles = new HashSet<>();
+        Role role_admin = roleRepository.findByName("ROLE_ADMIN");
+        userRoles.add(role_admin);
+        user.setRoles(userRoles);
+        userService.saveUser(user);
+        return "redirect:/admin/adminList";
+    }
 }
