@@ -17,6 +17,6 @@ public class EntityNotFoundExceptionHandler {
         model.addAttribute("exception", exception);
         model.addAttribute("url", req.getRequestURL() );
         model.addAttribute("errorMessage", exception.getMessage());
-        return "entityNotFoundExceptionPage";
+        return "exceptionViews/entityNotFoundExceptionPage";
     }
 }

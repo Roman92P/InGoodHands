@@ -20,6 +20,39 @@
             <table class="table">
                 <thead>
                 <tr>
+                    <th>Filtry</th>
+                    <th>
+                        <a th:href="@{/user/donations/collected}" class="btn" role="button">Odebrane</a>
+                        <a th:href="@{/user/donations/notcollected}" class="btn" role="button">Niedebrane</a>
+                        <a th:href="@{/user/donations}" class="btn" role="button">Wszystkie</a>
+                    </th>
+<!--                    <th>-->
+<!--                        Status-->
+<!--                        <select id="statusOfDonation">-->
+<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+<!--                            <option value="odebrane">Odebrane</option>-->
+<!--                            <option value="nieodebrane">Nieodebrane</option>-->
+<!--                        </select>-->
+<!--                    </th>-->
+<!--                    <th>-->
+<!--                        Data odbioru-->
+<!--                        <select>-->
+<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+<!--                            <option>Rosnąco</option>-->
+<!--                            <option>Malejąco</option>-->
+<!--                        </select>-->
+<!--                    </th>-->
+<!--                    <th>-->
+<!--                        Data utworzenia wpisu-->
+<!--                        <select>-->
+<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+<!--                            <option>Rosnąco</option>-->
+<!--                            <option>Malejąco</option>-->
+<!--                        </select>-->
+<!--                    </th>-->
+                </tr>
+                <tr>
+                    <th>Kategorie</th>
                     <th>Data utworzenia</th>
                     <th>Status</th>
                     <th>Dla organizacji</th>
@@ -28,7 +61,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="donation:${allDonations}">
+                <tr id="tableBody" th:each="donation:${allDonations}">
+                    <td>
+                        <ul th:each="category:${donation.categories}">
+                            <li th:text="${category.name}"></li>
+                        </ul>
+                    </td>
                     <td th:text="${donation.createdOn}"></td>
                     <td>
                         <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">

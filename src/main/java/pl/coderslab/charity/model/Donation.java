@@ -1,14 +1,18 @@
 package pl.coderslab.charity.model;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "donations")
+@AllArgsConstructor
 public class Donation {
 
     @Id
@@ -48,6 +52,9 @@ public class Donation {
     @Column(name = "pick_up_time")
     private LocalTime pickUpTime;
 
+    @Column(name = "pick_up_date_time")
+    private LocalDateTime pickUpDateTime;
+
     @Column(name ="pick_up_comment")
     private String pickUpComment;
 
@@ -59,7 +66,14 @@ public class Donation {
 
     @PrePersist
     public void prePersist() {
+
         createdOn = LocalDate.now();
+        String date = pickUpDate.toString();
+        String time = pickUpTime.toString();
+        String dateTime = date + " "+time;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        pickUpDateTime = LocalDateTime.parse(dateTime, formatter);
+
     }
 
     public Donation(Long id, int quantity, Set<Category> categories, Institution institution, String street, String city, String zipCode, LocalDate pickUpDate, LocalTime pickUpTime, String pickUpComment, String phoneNumber, User user, LocalDate createdOn) {
@@ -81,9 +95,17 @@ public class Donation {
     public Donation() {
     }
 
-    public void setPickUpDate(LocalDate pickUpDate) {
-        this.pickUpDate = pickUpDate;
+    public LocalDateTime getPickUpDateTime() {
+        return pickUpDateTime;
     }
+
+    public void setPickUpDateTime(LocalDateTime pickUpDateTime) {
+        this.pickUpDateTime = pickUpDateTime;
+    }
+
+//    public void setPickUpDate(LocalDate pickUpDate) {
+//        this.pickUpDate = pickUpDate;
+//    }
 
     public LocalDate getCreatedOn() {
         return createdOn;
@@ -162,8 +184,9 @@ public class Donation {
     }
 
     public void setPickUpDate(String pickUpDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-        this.pickUpDate = LocalDate.parse(pickUpDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.pickUpDate = LocalDate.parse(pickUpDate, formatter);
+//        this.pickUpDate = pickUpDate;
     }
 
     public LocalTime getPickUpTime() {

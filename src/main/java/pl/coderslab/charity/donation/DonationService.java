@@ -1,6 +1,7 @@
 package pl.coderslab.charity.donation;
 
 import pl.coderslab.charity.model.Donation;
+import pl.coderslab.charity.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,12 @@ public interface DonationService {
     Optional<Integer> getSumOfBags();
     Optional<Integer> getSumOfDonations();
     List<Donation>usersDonations(Long id);
-    List<Donation>usersNotCollected(LocalDate day,LocalDate day1, LocalTime time);
-    List<Donation>usersCollected(LocalDate day,LocalDate day1, LocalTime time);
+    List<Donation>usersNotCollected( Long id,LocalDate day,LocalDate day1, LocalTime time);
+    List<Donation>usersCollected( Long id, LocalDate day,LocalDate day1, LocalTime time);
+
+    List<Object[]>findAllUserCollectedDonations(LocalDateTime nowDateTime, Long userId);
+    List<Object[]>findAllUserNotCollectedDonations(LocalDateTime nowDateTime, Long userId);
+
+    List<Donation>getAlreadyCollectedDonations(LocalDateTime currentDate, User user);
+    List<Donation>getNotCollectedYetDonations(LocalDateTime currentDate, User user);
 }

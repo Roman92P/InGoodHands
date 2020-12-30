@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header class="header--main-page">
+    <div th:insert="fragments/header"></div>
+</header>
+<section id="help" class="help">
+    <h2>Twoje darowizny</h2>
+    <div class="help--slides active" data-id="1">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Filtry</th>
+                    <th>
+                        <a th:href="@{/user/donations/collected}" class="btn" role="button">Odebrane</a>
+                        <a th:href="@{/user/donations/notcollected}" class="btn" role="button">Niedebrane</a>
+                        <a th:href="@{/user/donations}" class="btn" role="button">Wszystkie</a>
+                    </th>
+                    <!--                    <th>-->
+                    <!--                        Status-->
+                    <!--                        <select id="statusOfDonation">-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option value="odebrane">Odebrane</option>-->
+                    <!--                            <option value="nieodebrane">Nieodebrane</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
+                    <!--                    <th>-->
+                    <!--                        Data odbioru-->
+                    <!--                        <select>-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option>Rosnąco</option>-->
+                    <!--                            <option>Malejąco</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
+                    <!--                    <th>-->
+                    <!--                        Data utworzenia wpisu-->
+                    <!--                        <select>-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option>Rosnąco</option>-->
+                    <!--                            <option>Malejąco</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
+                </tr>
+                <tr>
+                    <th>Data utworzenia</th>
+                    <th>Status</th>
+                    <th>Dla organizacji</th>
+                    <th>ID</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="tableBody" th:each="donation:${allNotCollectedDonations}">
+                    <td th:text="${donation.createdOn}"></td>
+                    <td>
+                        <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">
+                            <span th:case="true">Nieodebrana</span>
+                            <span th:case="false">Odebrana<span class="ml-1" th:text="${donation.pickUpDate} "></span></span>
+                        </div>
+
+                    </td>
+                    <td th:text="${donation.institution.name}"></td>
+                    <td th:text="${donation.id}"></td>
+                    <td>
+                        <!--                        Donation details modal-->
+                        <!--                        <a th:href="@{/user/donations/details/{id}(id=${donation.id})}">Szczegóły</a>-->
+                        <a data-target="#detailsModal"
+                           data-toggle="modal"
+                           th:attrappend="data-target=${donation.id}"
+                           class="btn" role="button">Szczegóły</a>
+                        <!--                        Modal-->
+                        <div class="modal fade" id="detailsModal"
+                             th:attrappend="id=${donation.id}" tabindex="-1"
+                             role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Szczegóły darowizny o id<span
+                                                th:text="${donation.id}"></span>
+                                        </h5>
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-responsive">
+                                            <thead>
+                                            <tr>
+                                                <th>Miasto</th>
+                                                <th>Data utowrzenia</th>
+                                                <th>Numer telefonu</th>
+                                                <th>Komentarz</th>
+                                                <th>Dzień odbioru</th>
+                                                <th>Godzina odbioru</th>
+                                                <th>Ilość worków</th>
+                                                <th>Ulica</th>
+                                                <th>Kod pocztowy</th>
+                                                <th>Dla organizacji</th>
+                                                <th>Id użytkownika</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td th:text="${donation.city}"></td>
+                                                <td th:text="${donation.createdOn}"></td>
+                                                <td th:text="${donation.phoneNumber}"></td>
+                                                <td th:text="${donation.pickUpComment}"></td>
+                                                <td th:text="${donation.pickUpDate}"></td>
+                                                <td th:text="${donation.pickUpTime}"></td>
+                                                <td th:text="${donation.quantity}"></td>
+                                                <td th:text="${donation.street}"></td>
+                                                <td th:text="${donation.zipCode}"></td>
+                                                <td th:text="${donation.institution.name}"></td>
+                                                <td th:text="${donation.user.id}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn"
+                                                data-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        End Donation modal-->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div th:insert="fragments/footer"></div>
+<script th:src="@{/js/app.js}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 package pl.coderslab.charity.donation;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +10,8 @@ import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.model.Category;
 import pl.coderslab.charity.model.Donation;
 import pl.coderslab.charity.model.Institution;
+import pl.coderslab.charity.user.CurrentUser;
+import pl.coderslab.charity.user.UserService;
 
 import java.util.List;
 
@@ -29,13 +31,14 @@ public class DonationController {
 
     @RequestMapping
     public String getDonationForm(){
-        return "form";
+        return "donationViews/form";
     }
 
     @PostMapping("/confirm")
-    public String createNewDonation(Donation donation){
+    public String createNewDonation(@ModelAttribute("newDonation") Donation donation, @AuthenticationPrincipal CurrentUser currentUser){
+        donation.setUser(currentUser.getUser());
         donationService.addDonation(donation);
-        return "form-confirmation";
+        return "donationViews/form-confirmation";
     }
 
     @ModelAttribute("newDonation")
