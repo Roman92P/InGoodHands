@@ -31,12 +31,13 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String addNewUser(@Valid @ModelAttribute("newUser")  User user, BindingResult result) {
+    public String addNewUser(@Valid @ModelAttribute("newUser")  User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "register";
         }
         userService.saveUser(user);
-        return "redirect:/home";
+        model.addAttribute("successEmail", "Email with atctivation has been sent! Check your email.");
+        return "login";
     }
 
     @ModelAttribute("newUser")

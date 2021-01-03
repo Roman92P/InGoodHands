@@ -63,9 +63,14 @@
                 <tr id="tableBody" th:each="donation:${allCollectedDonations}">
                     <td th:text="${donation.createdOn}"></td>
                     <td>
-                        <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">
-                            <span th:case="true">Nieodebrana</span>
-                            <span th:case="false">Odebrana<span class="ml-1" th:text="${donation.pickUpDate} "></span></span>
+<!--                        <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">-->
+<!--                            <span th:case="true">Nieodebrana</span>-->
+<!--                            <span th:case="false">Odebrana<span class="ml-1" th:text="${donation.pickUpDate} "></span></span>-->
+<!--                        </div>-->
+                        <div th:switch="${donation.status}=='odebrany'">
+                            <span th:case="false">Nieodebrana</span>
+                            <span th:case="true">Odebrana<span class="ml-1"
+                                                               th:text="${donation.pickUpDateTime} "></span></span>
                         </div>
 
                     </td>

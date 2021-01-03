@@ -12,9 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.donation.DonationService;
 import pl.coderslab.charity.model.Donation;
 import pl.coderslab.charity.model.User;
@@ -22,14 +20,9 @@ import pl.coderslab.charity.model.User;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -84,6 +77,13 @@ public class UserController {
         LocalTime parse = LocalTime.parse(timeNow);
         model.addAttribute("dateNow", currentDate);
         model.addAttribute("timeNow", parse);
+
+//        log.error("Czas: "+timeNow);
+//        log.error("Data: "+ currentDate);
+        for ( Donation d:donations ){
+            log.error("czas z db: "+ d.getPickUpTime());
+        }
+
         return "userViews/userDonations";
     }
 
@@ -115,6 +115,35 @@ public class UserController {
         model.addAttribute("dateNow", currentDate);
         model.addAttribute("timeNow", parse);
         return "userViews/userNotCollectedDonations";
+    }
+
+    @PostMapping("/donations/details/changeStatus")
+    public String changeDonationDetailsStatus(@ModelAttribute("statusDonation") Donation donation){
+        Donation donation1 = donationService.getDonation(donation.getId()).orElseThrow(EntityNotFoundException::new);
+        if(donation.getStatus().equals("nieodebrany")){
+            LocalDateTime localDateTime = LocalDateTime.from(LocalDateTime.now().atZone(ZoneId.of("Europe/Warsaw"))).plusDays(2);
+            donation.setPickUpDateTime(localDateTime);
+            LocalDate localDate = localDateTime.toLocalDate();
+            LocalTime localTime = localDateTime.toLocalTime();
+            log.error("New time: "+ localTime);
+            donation.setPickUpDate(String.valueOf(localDate));
+            donation.setPickUpTime(localTime);
+            donation.setCreatedOn(donation1.getCreatedOn());
+            donationService.updateDonation(donation);
+            return "redirect:/user/donations";
+        }
+        donation.setPickUpDateTime(LocalDateTime.now());
+        donation.setPickUpDate(String.valueOf(LocalDate.now()));
+        donation.setPickUpTime(LocalTime.now());
+        donation.setCreatedOn(donation1.getCreatedOn());
+        donationService.updateDonation(donation);
+        return "redirect:/user/donations";
+    }
+
+
+    @ModelAttribute("statusDonation")
+    public Donation updateStatusDonation(){
+        return new Donation();
     }
 
 }

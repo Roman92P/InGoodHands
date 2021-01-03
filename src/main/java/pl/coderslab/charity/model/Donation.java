@@ -20,6 +20,9 @@ public class Donation {
     @Column(name = "donation_id")
     private Long id;
 
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "bag_quantity")
     private int quantity;
 
@@ -95,6 +98,14 @@ public class Donation {
     public Donation() {
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public LocalDateTime getPickUpDateTime() {
         return pickUpDateTime;
     }
@@ -102,10 +113,6 @@ public class Donation {
     public void setPickUpDateTime(LocalDateTime pickUpDateTime) {
         this.pickUpDateTime = pickUpDateTime;
     }
-
-//    public void setPickUpDate(LocalDate pickUpDate) {
-//        this.pickUpDate = pickUpDate;
-//    }
 
     public LocalDate getCreatedOn() {
         return createdOn;

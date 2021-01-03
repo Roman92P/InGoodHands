@@ -37,6 +37,7 @@ public class DonationController {
     @PostMapping("/confirm")
     public String createNewDonation(@ModelAttribute("newDonation") Donation donation, @AuthenticationPrincipal CurrentUser currentUser){
         donation.setUser(currentUser.getUser());
+        donation.setStatus("nieodebrany");
         donationService.addDonation(donation);
         return "donationViews/form-confirmation";
     }

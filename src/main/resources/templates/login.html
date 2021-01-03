@@ -12,6 +12,18 @@
   <div th:insert="fragments/header"></div>
   </header>
     <section class="login-page">
+      <div th:if="${successEmail}">
+        <h1><span th:text="${successEmail}"></span></h1>
+      </div>
+      <div th:if="${message2}">
+        <h1><span th:text="${message2}" style="color: crimson"></span></h1>
+      </div>
+      <div th:if="${message1}">
+        <h1><span th:text="${message1}" style="color: darkseagreen"></span></h1>
+      </div>
+      <div th:if="${noActiveUser}">
+        <h1><span th:text="${noActiveUser}" style="color: crimson"></span></h1>
+      </div>
       <div sec:authorize="isAuthenticated()">
         <h1>Jesteś zalogowany</h1>
       </div>

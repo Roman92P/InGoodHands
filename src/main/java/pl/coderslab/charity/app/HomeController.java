@@ -10,6 +10,7 @@ import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.model.Institution;
 import pl.coderslab.charity.model.User;
 import pl.coderslab.charity.user.CurrentUser;
+import pl.coderslab.charity.user.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,12 @@ public class HomeController {
 
     private final InstitutionService institutionService;
     private final DonationService donationService;
+    private final UserService userService;
 
-    public HomeController(InstitutionService institutionService, DonationService donationService) {
+    public HomeController(InstitutionService institutionService, DonationService donationService, UserService userService) {
         this.institutionService = institutionService;
         this.donationService = donationService;
+        this.userService = userService;
     }
 
     @RequestMapping("/")
@@ -43,6 +46,18 @@ public class HomeController {
         User user = currentUser.getUser();
         if (user.isEnabled()) {
             return "redirect:/donations";
+        }
+        model.addAttribute("noActiveUser", "User is not activated. Check your email!");
+        return "login";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(@PathVariable String code, Model model) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("message1", "User successfuly activated");
+        } else {
+            model.addAttribute("message2", "Activation code is no found");
         }
         return "login";
     }

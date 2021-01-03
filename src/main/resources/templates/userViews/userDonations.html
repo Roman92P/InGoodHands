@@ -22,39 +22,40 @@
                 <tr>
                     <th>Filtry</th>
                     <th>
-                        <a th:href="@{/user/donations/collected}" class="btn" role="button">Odebrane</a>
-                        <a th:href="@{/user/donations/notcollected}" class="btn" role="button">Niedebrane</a>
-                        <a th:href="@{/user/donations}" class="btn" role="button">Wszystkie</a>
+                        <a th:href="@{/user/donations/collected}" class="btn--small" role="button">Odebrane</a>
+                        <a th:href="@{/user/donations/notcollected}" class="btn--small" role="button">Nieodebrane</a>
+                        <a th:href="@{/user/donations}" class="btn--small" role="button">Wszystkie</a>
                     </th>
-<!--                    <th>-->
-<!--                        Status-->
-<!--                        <select id="statusOfDonation">-->
-<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
-<!--                            <option value="odebrane">Odebrane</option>-->
-<!--                            <option value="nieodebrane">Nieodebrane</option>-->
-<!--                        </select>-->
-<!--                    </th>-->
-<!--                    <th>-->
-<!--                        Data odbioru-->
-<!--                        <select>-->
-<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
-<!--                            <option>Rosnąco</option>-->
-<!--                            <option>Malejąco</option>-->
-<!--                        </select>-->
-<!--                    </th>-->
-<!--                    <th>-->
-<!--                        Data utworzenia wpisu-->
-<!--                        <select>-->
-<!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
-<!--                            <option>Rosnąco</option>-->
-<!--                            <option>Malejąco</option>-->
-<!--                        </select>-->
-<!--                    </th>-->
+                    <!--                    <th>-->
+                    <!--                        Status-->
+                    <!--                        <select id="statusOfDonation">-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option value="odebrane">Odebrane</option>-->
+                    <!--                            <option value="nieodebrane">Nieodebrane</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
+                    <!--                    <th>-->
+                    <!--                        Data odbioru-->
+                    <!--                        <select>-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option>Rosnąco</option>-->
+                    <!--                            <option>Malejąco</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
+                    <!--                    <th>-->
+                    <!--                        Data utworzenia wpisu-->
+                    <!--                        <select>-->
+                    <!--                            <option>&#45;&#45;choose&#45;&#45;</option>-->
+                    <!--                            <option>Rosnąco</option>-->
+                    <!--                            <option>Malejąco</option>-->
+                    <!--                        </select>-->
+                    <!--                    </th>-->
                 </tr>
                 <tr>
                     <th>Kategorie</th>
                     <th>Data utworzenia</th>
                     <th>Status</th>
+                    <th>Status#2</th>
                     <th>Dla organizacji</th>
                     <th>ID</th>
                     <th>Actions</th>
@@ -69,22 +70,29 @@
                     </td>
                     <td th:text="${donation.createdOn}"></td>
                     <td>
-                        <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">
-                            <span th:case="true">Nieodebrana</span>
-                            <span th:case="false">Odebrana<span class="ml-1" th:text="${donation.pickUpDate} "></span></span>
+                        <!--                        <div th:switch="${donation.pickUpDate}>${dateNow} or ${donation.pickUpDate}==${dateNow} and ${donation.pickUpTime}>${timeNow}">-->
+                        <!--                            <span th:case="true">Nieodebrana</span>-->
+                        <!--                            <span th:case="false">Odebrana<span class="ml-1"-->
+                        <!--                                                                th:text="${donation.pickUpDate} "></span></span>-->
+                        <!--                        </div>-->
+                        <div th:switch="${donation.status}=='odebrany'">
+                            <span th:case="false">Nieodebrana</span>
+                            <span th:case="true">Odebrana<span class="ml-1"
+                                                               th:text="${donation.pickUpDateTime} "></span></span>
                         </div>
 
                     </td>
+                    <td th:text="${donation.status}"></td>
                     <td th:text="${donation.institution.name}"></td>
                     <td th:text="${donation.id}"></td>
                     <td>
-<!--                        Donation details modal-->
-<!--                        <a th:href="@{/user/donations/details/{id}(id=${donation.id})}">Szczegóły</a>-->
-                        <a data-target="#detailsModal"
+                        <!--                        Donation details modal-->
+                        <!--                        <a th:href="@{/user/donations/details/{id}(id=${donation.id})}">Szczegóły</a>-->
+                        <a id="jsTriger" data-target="#detailsModal"
                            data-toggle="modal"
                            th:attrappend="data-target=${donation.id}"
                            class="btn" role="button">Szczegóły</a>
-<!--                        Modal-->
+                        <!--                        Modal-->
                         <div class="modal fade" id="detailsModal"
                              th:attrappend="id=${donation.id}" tabindex="-1"
                              role="dialog"
@@ -132,6 +140,68 @@
                                                 <td th:text="${donation.institution.name}"></td>
                                                 <td th:text="${donation.user.id}"></td>
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <form th:action="@{/user/donations/details/changeStatus}"
+                                                          th:method="post" th:object="${statusDonation}">
+                                                        <label th:for="*{id}">
+                                                            <input hidden th:attr="name='id'" th:value="${donation.id}">
+                                                        </label>
+                                                        <label th:for="*{city}">
+                                                            <input hidden th:attr="name='city'"
+                                                                   th:value="${donation.city}">
+                                                        </label>
+                                                        <label th:for="*{phoneNumber}">
+                                                            <input hidden th:attr="name='phoneNumber'"
+                                                                   th:value="${donation.phoneNumber}">
+                                                        </label>
+                                                        <label th:for="*{pickUpComment}">
+                                                            <input hidden th:attr="name='pickUpComment'"
+                                                                   th:value="${donation.pickUpComment}">
+                                                        </label>
+                                                        <label th:for="*{quantity}">
+                                                            <input hidden th:attr="name='quantity'"
+                                                                   th:value="${donation.quantity}">
+                                                        </label>
+                                                        <label th:for="*{street}">
+                                                            <input hidden th:attr="name='street'"
+                                                                   th:value="${donation.street}">
+                                                        </label>
+                                                        <label th:for="*{zipCode}">
+                                                            <input hidden th:attr="name='zipCode'"
+                                                                   th:value="${donation.zipCode}">
+                                                        </label>
+                                                        <label th:for="*{user}">
+                                                            <input hidden th:attr="name='user'"
+                                                                   th:value="${donation.user.id}">
+                                                        </label>
+                                                        <label th:for="*{institution}">
+                                                            <input hidden th:attr="name='institution'"
+                                                                   th:value="${donation.institution.id}">
+                                                        </label>
+                                                        <label th:for="*{categories}">
+                                                            <div th:each="cat:${donation.categories}">
+                                                                <input hidden th:attr="name='categories'"
+                                                                       th:value="${cat.id}">
+                                                            </div>
+                                                        </label>
+                                                        <label th:for="*{status}">
+                                                            <select id="packageStatus" name="status">
+                                                                <option value="0">--Aktualizuj status--</option>
+                                                                <option value="odebrany">Odebrany</option>
+                                                                <option value="nieodebrany">Nieodebrany</option>
+                                                            </select>
+                                                        </label>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div id="newDate">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="submit" value="Aktualizuj status"/>
+                                                    </form>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -143,7 +213,7 @@
                                 </div>
                             </div>
                         </div>
-<!--                        End Donation modal-->
+                        <!--                        End Donation modal-->
                     </td>
                 </tr>
                 </tbody>
@@ -153,6 +223,7 @@
 </section>
 <div th:insert="fragments/footer"></div>
 <script th:src="@{/js/app.js}"></script>
+<!--<script th:src="@{/js/changeStatus.js}"></script>-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

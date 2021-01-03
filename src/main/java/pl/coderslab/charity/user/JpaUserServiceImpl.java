@@ -1,17 +1,20 @@
 package pl.coderslab.charity.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import pl.coderslab.charity.email.EmailService;
 import pl.coderslab.charity.model.Role;
 import pl.coderslab.charity.model.User;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JpaUserServiceImpl implements UserService {
+
+    @Autowired
+    private EmailService emailService;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -29,7 +32,15 @@ public class JpaUserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
+    public boolean saveUser(User user) {
+
+        Optional<User> byUserName = userRepository.findByUserName(user.getUserName());
+        if(byUserName.isPresent()){
+            return false;
+        }
+
+        user.setActivationCode(UUID.randomUUID().toString());
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
         if (user.getRoles().size()==0) {
@@ -37,6 +48,31 @@ public class JpaUserServiceImpl implements UserService {
             user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         }
         userRepository.save(user);
+
+        if(!StringUtils.isEmpty(user.getUserEmail())){
+            String message = String.format("Hello %s! Welcome to charity app. Please activate your account" +
+                    " throught this link:http://localhost:8080/activate/%s", user.getUserName(), user.getActivationCode());
+            emailService.send(user.getUserEmail(), "Activation code", message);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean activateUser(String code) {
+        Optional<User> user =  userRepository.findByActivationCode(code);
+        if(!user.isPresent()){
+            return false;
+        }
+        User user1 = user.get();
+        user1.setActivationCode(null);
+        user1.setEnabled(true);
+        userRepository.save(user1);
+        return true;
+    }
+
+    @Override
+    public Optional<User> findByActivationCode(String code) {
+        return userRepository.findByActivationCode(code);
     }
 
     @Override

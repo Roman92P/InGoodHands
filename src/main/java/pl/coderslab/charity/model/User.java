@@ -57,4 +57,6 @@ public class User {
         return enabled;
     }
 
+    private String activationCode;
+
 }
