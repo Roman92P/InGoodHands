@@ -75,8 +75,9 @@ public class JpaUserServiceImpl implements UserService {
         return userRepository.findByActivationCode(code);
     }
 
+
     @Override
-    public User findByUserEmail(String email) {
+    public Optional<User> findByUserEmail(String email) {
         return userRepository.findByUserEmail(email);
     }
 
