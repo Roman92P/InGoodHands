@@ -92,9 +92,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <a class="subtitle"
-                               th:href="@{/admin/user/details/{id}(id=${allUsers[index.index+1].id})}"
-                               role="button">Szczegóły</a>
+                            <div th:if="${allUsers.size()>index.index+1}">
+                                <a class="subtitle"
+                                   th:href="@{/admin/user/details/{id}(id=${allUsers[index.index+1].id})}"
+                                   role="button">Szczegóły</a>
+                            </div>
                         </div>
                     </div>
                 </li>

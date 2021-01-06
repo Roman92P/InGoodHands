@@ -39,19 +39,17 @@ public class PasswordController {
     private EmailService emailService;
 
     private final SpringDataUserDetailsService userDetailsService;
-    private final RoleRepository roleRepository;
     private final UserService userService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final SecurityService securityService;
     private final MessageSource messages;
 
-    public PasswordController(SpringDataUserDetailsService userDetailsService, RoleRepository roleRepository, UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, @Qualifier("messageSource") MessageSource messages) {
+    public PasswordController(SpringDataUserDetailsService userDetailsService, UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, @Qualifier("messageSource") MessageSource messages) {
         this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.passwordResetTokenService = passwordResetTokenService;
         this.securityService = securityService;
         this.messages = messages;
-        this.roleRepository = roleRepository;
     }
 
     @ModelAttribute("user")
@@ -120,6 +118,28 @@ public class PasswordController {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserEmail(user.getUserEmail());
         model.addAttribute("user", user);
+        model.addAttribute("token",token);
         return "/userViews/updatePassword";
     }
+
+    @Secured("{CHANGE_PASSWORD_PRIVILEGE}")
+    @PostMapping("/updatePassword/{token}")
+    public String updateUserPassword(@ModelAttribute("user") UserDTO userDTO, @PathVariable String token ,
+                                     Model model, Locale locale, Authentication authentication){
+        if(userDTO.getPassword()==null){
+            return "redirect:/recallPassword/newPassword?lang=" + locale.getLanguage()+"&token="+token;
+        }
+        User user = null;
+        try{
+            user = passwordResetTokenService.findByToken(token).getUser();
+        }catch (NullPointerException e){
+            model.addAttribute("emptyToken", "Nie ma takiego tokenu");
+            return "login";
+        }
+        userService.setNewPossword(user,userDTO.getPassword());
+        authentication.setAuthenticated(false);
+        model.addAttribute("successPasswordUpdate", "Hasło zostało pomyślnie zmienione");
+        return "login";
+    }
+
 }

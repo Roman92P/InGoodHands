@@ -12,6 +12,12 @@
   <div th:insert="fragments/header"></div>
   </header>
     <section class="login-page">
+      <div th:if="${emptyToken}">
+        <h1><span style="color:crimson;" th:text="${emptyToken}"></span></h1>
+      </div>
+      <div th:if="${successPasswordUpdate}">
+        <h1><span style="color:forestgreen;" th:text="${successPasswordUpdate}"></span></h1>
+      </div>
       <div th:if="${successEmail}">
         <h1><span th:text="${successEmail}"></span></h1>
       </div>

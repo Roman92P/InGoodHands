@@ -2,6 +2,7 @@ package pl.coderslab.charity.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleContextResolver;
@@ -18,6 +19,14 @@ import java.util.Locale;
 
 @Configuration
 public class WebAppConfig implements WebMvcConfigurer {
+
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        messageSource.setUseCodeAsDefaultMessage(true);
+        return messageSource;
+    }
 
     @Bean(name = "localeResolver")
     public LocaleContextResolver getLocaleContextResolver() {

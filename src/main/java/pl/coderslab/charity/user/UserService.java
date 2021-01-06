@@ -18,4 +18,6 @@ public interface UserService {
     Optional<User> findByActivationCode(String code);
 
     void addRole(Long id, String role_change_password_privilege);
+
+    void setNewPossword(User user, String password);
 }

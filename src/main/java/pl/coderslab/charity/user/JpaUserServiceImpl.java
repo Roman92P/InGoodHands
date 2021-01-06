@@ -8,6 +8,7 @@ import pl.coderslab.charity.email.EmailService;
 import pl.coderslab.charity.model.Role;
 import pl.coderslab.charity.model.User;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Service
@@ -84,6 +85,13 @@ public class JpaUserServiceImpl implements UserService {
             roles.add(roleRepository.findByName(role_change_password_privilege));
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void setNewPossword(User user, String password) {
+        User userToUpdate = userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
+        userToUpdate.setPassword(passwordEncoder.encode(password));
+        userRepository.save(userToUpdate);
     }
 
 

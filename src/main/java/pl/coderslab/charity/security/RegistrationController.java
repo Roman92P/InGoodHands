@@ -12,6 +12,7 @@ import pl.coderslab.charity.user.UserService;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/register")

@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Size(min = 2, max = 15, message = "Imię użytkownika nie może być pusta")
+    @Size(min = 2, max = 15, message = "Imię użytkownika nie może być puste")
     @Column(name = "user_name", unique = true)
     private String userName;
 
@@ -30,11 +31,15 @@ public class User {
     @Column(name = "user_lastname")
     private String userLastname;
 
+    @NotEmpty(message = "Mail nie może być pusty")
     @Email
     @Column(name = "user_email", unique = true)
     private String userEmail;
 
     @NotEmpty (message = "hasło nie może być puste")
+    @Size(min = 8, message = "Hasło powinno zawierać min 8 znaków")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&!+=])(?=\\S+$).{8,}$", message = "Hasło powinno zawierać przynajmniej:\n-jeden mały znak\n-jeden duży znak\n-jeden znak " +
+            "specjalny\n-jedną liczbę")
     @Column(name="user_password")
     private String password;
 

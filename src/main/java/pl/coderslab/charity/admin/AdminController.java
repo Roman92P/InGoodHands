@@ -1,6 +1,8 @@
 package pl.coderslab.charity.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,7 @@ import javax.validation.Validator;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Controller
@@ -33,15 +36,17 @@ public class AdminController {
     private final InstitutionService institutionService;
     private final DonationService donationService;
     private final RoleRepository roleRepository;
+    private final MessageSource messages;
 
     @Autowired
     Validator validator;
 
-    public AdminController(UserService userService, InstitutionService institutionService, DonationService donationService, RoleRepository roleRepository) {
+    public AdminController(UserService userService, InstitutionService institutionService, DonationService donationService, RoleRepository roleRepository, @Qualifier("messageSource") MessageSource messages) {
         this.userService = userService;
         this.institutionService = institutionService;
         this.donationService = donationService;
         this.roleRepository = roleRepository;
+        this.messages = messages;
     }
 
     @RequestMapping
@@ -201,9 +206,15 @@ public class AdminController {
     }
 
     @PostMapping("/addNewAdmin")
-    public String adminAddNewAdmin(@Valid @ModelAttribute("newAdmin") User user, BindingResult result){
+    public String adminAddNewAdmin(@Valid @ModelAttribute("newAdmin") User user, BindingResult result, Locale locale, Model model){
         if(result.hasErrors()){
             return "adminViews/adminAddNewAdmin";
+        }
+        if(userService.findByUserEmail(user.getUserEmail()).isPresent()){
+            String message = messages.getMessage("email.ableToRegister.not", null, locale);
+            User user1 = new User();
+            model.addAttribute("newAdmin", user1);
+            return "redirect:/admin/addNewAdmin?lang="+locale.getCountry()+"&message="+message;
         }
         Set<Role> userRoles = new HashSet<>();
         Role role_admin = roleRepository.findByName("ROLE_ADMIN");

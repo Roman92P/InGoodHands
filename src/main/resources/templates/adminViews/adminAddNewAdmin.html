@@ -13,6 +13,9 @@
 </header>
 <section class="login-page">
     <h2>Dodaj nowego admina</h2>
+    <div th:if="${(param.message)!=null}">
+        <h2><span style="color: crimson" th:text="${param.message}"></span></h2>
+    </div>
     <form th:action="@{/admin/addNewAdmin}" th:object="${newAdmin}" method="post">
         <div class="form-group">
             <label th:for="*{userEmail}">
