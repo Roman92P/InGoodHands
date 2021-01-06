@@ -1,61 +1,83 @@
 package pl.coderslab.charity.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.email.EmailService;
 import pl.coderslab.charity.model.PasswordResetToken;
 import pl.coderslab.charity.model.User;
 import pl.coderslab.charity.passwordResetToken.PasswordResetTokenService;
+import pl.coderslab.charity.user.RoleRepository;
+import pl.coderslab.charity.user.SpringDataUserDetailsService;
 import pl.coderslab.charity.user.UserDTO;
 import pl.coderslab.charity.user.UserService;
 
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/recallPassword")
 public class PasswordController {
 
+    Logger logger = LoggerFactory.getLogger(PasswordController.class);
+
     @Autowired
     private EmailService emailService;
 
+    private final SpringDataUserDetailsService userDetailsService;
+    private final RoleRepository roleRepository;
     private final UserService userService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final SecurityService securityService;
     private final MessageSource messages;
 
-    public PasswordController(UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, MessageSource messages) {
+    public PasswordController(SpringDataUserDetailsService userDetailsService, RoleRepository roleRepository, UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, @Qualifier("messageSource") MessageSource messages) {
+        this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.passwordResetTokenService = passwordResetTokenService;
         this.securityService = securityService;
         this.messages = messages;
+        this.roleRepository = roleRepository;
+    }
+
+    @ModelAttribute("user")
+    public UserDTO getNewUserDTO(){
+        return new UserDTO();
     }
 
     @RequestMapping
-    public String recallUserPassword(Model model){
-        model.addAttribute("user",new UserDTO());
+    public String recallUserPassword(Model model) {
+        model.addAttribute("user", new UserDTO());
         return "userViews/recallPasswordView";
     }
 
     @PostMapping
-    public String sendUrlToSetNewPassword(UserDTO userDTO, Model model){
-        if(userDTO.getUserEmail()==null){
-            model.addAttribute("message", "Brak takiego maila");
-            return "recallPasswordView";
+    public String sendUrlToSetNewPassword(UserDTO userDTO, Model model) {
+        if (userDTO.getUserEmail() == null) {
+            model.addAttribute("mailAbsent", "Pole mail nie może być puste");
+            return "userViews/recallPasswordView";
         }
         User user = null;
         Optional<User> byUserEmail = userService.findByUserEmail(userDTO.getUserEmail());
-        if(!byUserEmail.isPresent()){
-            model.addAttribute("message", "Brak takiego maila");
-            return  "recallPasswordView";
+        if (!byUserEmail.isPresent()) {
+            model.addAttribute("message", "Brak takiego maila w bazie");
+            return "userViews/recallPasswordView";
         }
-        user=byUserEmail.get();
+        user = byUserEmail.get();
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
@@ -64,24 +86,40 @@ public class PasswordController {
         user = byUserEmail.get();
 
 
-        emailService.send(user.getUserEmail(),"Change password",
+        emailService.send(user.getUserEmail(), "Change password",
                 "Dears user!\n " +
                         "To change your password use this url:\n " +
-                        "http://localhost:8080/recallPassword/newPassword?token=" + token);
+                        "http://localhost:8080/recallPassword/newPassword?token=" + token + "\n" +
+                        "Token is valid during 5 minutes!");
         return "redirect:/home";
     }
 
     @RequestMapping("/newPassword")
     public String showChangePasswordPage(Locale locale, Model model,
-                                         @RequestParam("token") String token){
+                                         @RequestParam("token") String token, Authentication authentication) {
         String result = securityService.validatePasswordResetToken(token);
-        if(result != null) {
+        if (result != null) {
             String message = messages.getMessage("auth.message." + result, null, locale);
             return "redirect:/login?lang="
                     + locale.getLanguage() + "&message=" + message;
         } else {
             model.addAttribute("token", token);
-            return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
+            PasswordResetToken byToken = passwordResetTokenService.findByToken(token);
+            Collection<? extends GrantedAuthority> authorities = userDetailsService.loadUserByUsername(byToken.getUser().getUserName()).getAuthorities();
+            Collection<? extends GrantedAuthority> authorities1 = Collections.singleton(new SimpleGrantedAuthority("ROLE_CHANGE_PASSWORD_PRIVILEGE"));
+            authentication = new UsernamePasswordAuthenticationToken(byToken.getUser().getUserName(), null,
+                    authorities1);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return "redirect:/recallPassword/updatePassword?lang=" + locale.getLanguage()+"&token="+token;
         }
+    }
+
+    @RequestMapping("/updatePassword")
+    public String showPasswordChangeView(@RequestParam("token") String token, Principal principal, Model model) {
+        User user= userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserEmail(user.getUserEmail());
+        model.addAttribute("user", user);
+        return "/userViews/updatePassword";
     }
 }

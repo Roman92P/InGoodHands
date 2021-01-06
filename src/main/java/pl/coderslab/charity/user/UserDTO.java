@@ -1,5 +1,7 @@
 package pl.coderslab.charity.user;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserDTO {
 
     private String password;

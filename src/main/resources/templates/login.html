@@ -24,6 +24,10 @@
       <div th:if="${noActiveUser}">
         <h1><span th:text="${noActiveUser}" style="color: crimson"></span></h1>
       </div>
+      <div th:if="${(param.message)!=null}">
+        <h2><span style="color: crimson" th:text="${param.message}"></span></h2>
+      </div>
+      </div>
       <div sec:authorize="isAuthenticated()">
         <h1>Jesteś zalogowany</h1>
       </div>

@@ -31,7 +31,7 @@ public class User {
     private String userLastname;
 
     @Email
-    @Column(name = "user_email")
+    @Column(name = "user_email", unique = true)
     private String userEmail;
 
     @NotEmpty (message = "hasło nie może być puste")

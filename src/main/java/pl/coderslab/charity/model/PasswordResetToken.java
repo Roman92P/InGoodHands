@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -15,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class PasswordResetToken {
 
-    private static final int EXPIRATION = 5;
+    private static final int EXPIRATION = 60000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +28,13 @@ public class PasswordResetToken {
 
     private Date expiryDate;
 
+
     @PrePersist
     private void setExpiration(){
         Calendar calendar = Calendar.getInstance();
         long timeInMillis = calendar.getTimeInMillis();
-        long l = timeInMillis + EXPIRATION;
-        Date date = new Date();
-        date.setTime(l);
+        Date date = new Date(timeInMillis+(5 * EXPIRATION));
+//        Date date1 = new Date();
         this.expiryDate = date;
     }
 

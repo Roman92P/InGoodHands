@@ -75,6 +75,17 @@ public class JpaUserServiceImpl implements UserService {
         return userRepository.findByActivationCode(code);
     }
 
+    @Override
+    public void addRole(Long id, String role_change_password_privilege) {
+        Optional<User> byId = userRepository.findById(id);
+        if(byId.isPresent()){
+            User user = byId.get();
+            Set<Role> roles = user.getRoles();
+            roles.add(roleRepository.findByName(role_change_password_privilege));
+            userRepository.save(user);
+        }
+    }
+
 
     @Override
     public Optional<User> findByUserEmail(String email) {

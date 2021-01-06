@@ -16,4 +16,6 @@ public interface UserService {
     List<User> findAllAdmins();
     boolean activateUser(String code);
     Optional<User> findByActivationCode(String code);
+
+    void addRole(Long id, String role_change_password_privilege);
 }
