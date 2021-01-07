@@ -93,8 +93,10 @@
                         <div class="subtitle"><span th:text="${institution.description}"></span></div>
                     </div>
                     <div class="col">
-                        <div class="title"><span th:text="${allInstitutions[index.index+1].name}"></span></div>
-                        <div class="subtitle"><span th:text="${allInstitutions[index.index+1].description}"></span>
+                        <div th:if="${allInstitutions.size()>index.index+1}">
+                            <div class="title"><span th:text="${allInstitutions[index.index+1].name}"></span></div>
+                            <div class="subtitle"><span th:text="${allInstitutions[index.index+1].description}"></span>
+                            </div>
                         </div>
                     </div>
                 </li>
