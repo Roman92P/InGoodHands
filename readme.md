@@ -29,7 +29,7 @@ This web application allows user to hand over unnecessary things to people who r
 * First of all you need to instal maven if you don’t have.
 * Copy zip with project from repository
 * Create your DB, for example with Workbench
-* Go to \src\main\resources - set your pasword and user name to db.
+* Go to \src\main\resources - set your password and user name to db.
   * spring.datasource.username=[put name here]
   * spring.datasource.password=[put password here]
 * Set gmial address and password to be able send e-mails:
