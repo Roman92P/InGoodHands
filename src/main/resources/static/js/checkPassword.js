@@ -4,6 +4,7 @@ let passwordTwo = document.getElementById('passwordRep');
 let message = document.getElementById('passwordMessage');
 
 let logbtn = document.getElementById('loginButton');
+logbtn.style.display='none';
 
 passwordTwo.addEventListener('input', function (event) {
     let value = passwordOne.value;

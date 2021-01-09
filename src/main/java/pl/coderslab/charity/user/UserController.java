@@ -2,7 +2,8 @@ package pl.coderslab.charity.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,15 +13,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.donation.DonationService;
 import pl.coderslab.charity.model.Donation;
 import pl.coderslab.charity.model.User;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import java.security.Principal;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,42 +41,93 @@ public class UserController {
 
     Logger log = LoggerFactory.getLogger(UserController.class);
 
-    private final UserService userService;
-    private final SpringDataUserDetailsService springDataUserDetailsService;
-    private final DonationService donationService;
+    @Autowired
+    private Validator validator;
 
-    public UserController(UserService userService, SpringDataUserDetailsService springDataUserDetailsService, DonationService donationService) {
+    private final UserService userService;
+    private final DonationService donationService;
+    private final MessageSource messageSource;
+    private final UserDTOService userDTOService;
+
+
+    public UserController(UserService userService, SpringDataUserDetailsService springDataUserDetailsService, DonationService donationService, MessageSource messageSource, UserDTOService userDTOService) {
         this.userService = userService;
-        this.springDataUserDetailsService = springDataUserDetailsService;
         this.donationService = donationService;
+        this.messageSource = messageSource;
+        this.userDTOService = userDTOService;
     }
 
     @RequestMapping("/profile")
-    public String getUserProfile(Principal principal, Model model, @AuthenticationPrincipal CurrentUser currentUser){
+    public String getUserProfile(Principal principal, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         String name = principal.getName();
         User byUserName = userService.findByUserName(name).orElseThrow(EntityNotFoundException::new);
         model.addAttribute("user", byUserName);
-        return"userViews/userProfile";
+        return "userViews/userProfile";
     }
 
-    @PostMapping("/profile")
-    public String editUserProfile(@Valid User user, BindingResult result, Model model, @AuthenticationPrincipal CurrentUser currentUser){
-        if(result.hasErrors()){
-            User byUserName = userService.findByUserName(user.getUserName()).orElseThrow(EntityNotFoundException::new);
-            model.addAttribute("user", byUserName);
-            return"userViews/userProfile";
+    @RequestMapping("/profile/changePassword")
+    public String userChangeCurrentPassword(Model model, Principal principal) {
+        User user = userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserEmail(user.getUserEmail());
+        model.addAttribute("userDTO", userDTO);
+        return "userViews/userProfileChangePassword";
+    }
+
+    @PostMapping("/profile/changePassword")
+    public String userChangeCurrentPassword(UserDTO userDTO, Locale locale, Model model) {
+        String result = userDTOService.validatePasswordMatch(userDTO);
+        String result1 = userDTOService.validateCurrentUserPassword(userDTO);
+        if (result != null) {
+            String message1 = messageSource.getMessage("password.matches." + result, null, locale);
+            return "redirect:/user/profile/changePassword?lang=" + locale.getLanguage() + "&message1=" + message1;
         }
+        if (result1 != null) {
+            String message2 = messageSource.getMessage("user.profile.password.change." + result1, null, locale);
+            return "redirect:/user/profile/changePassword?lang=" + locale.getLanguage() + "&message2=" + message2;
+        }
+
+        User user = userService.findByUserEmail(userDTO.getUserEmail()).orElseThrow(EntityNotFoundException::new);
+        user.setPassword(userDTO.getPassword());
+        Set<ConstraintViolation<User>> validate = validator.validate(user);
+        if(!validate.isEmpty()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(ConstraintViolation<User> constraintViolation : validate){
+                stringBuilder.append(constraintViolation.getMessage());
+            }
+            String s = stringBuilder.toString();
+            model.addAttribute("errors", s);
+            return "userViews/userProfileChangePassword";
+        }
+        userService.updateUserPassword(user, userDTO.getPassword());
+        String message1 = messageSource.getMessage("user.profile.password.successChange", null, locale);
+        return "redirect:/user/profile?lang=" + locale.getLanguage() + "&successPasswordMessage=" + message1;
+    }
+
+    private void updateAuthorities(User user) {
+        userService.updateUser(user);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getRoles().forEach(r ->
                 grantedAuthorities.add(new SimpleGrantedAuthority(r.getName())));
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword(), grantedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        userService.updateUser(user);
+    }
+
+
+    @PostMapping("/profile")
+    public String editUserProfile(@Valid User user, BindingResult result, UserDTO userDTO,
+                                  Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+        if (result.hasErrors()) {
+            User byUserName = userService.findByUserName(user.getUserName()).orElseThrow(EntityNotFoundException::new);
+            model.addAttribute("user", byUserName);
+            return "userViews/userProfile";
+        }
+        updateAuthorities(user);
         return "redirect:/user/profile";
     }
 
     @RequestMapping("/donations")
-    public String viewAllUserDonations(Model model, @AuthenticationPrincipal CurrentUser user){
+    public String viewAllUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
         List<Donation> donations = donationService.usersDonations(id);
         List<Donation> donationList = donations.stream().sorted(Comparator.comparing(Donation::getPickUpDate)).collect(Collectors.toList());
@@ -77,20 +138,13 @@ public class UserController {
         LocalTime parse = LocalTime.parse(timeNow);
         model.addAttribute("dateNow", currentDate);
         model.addAttribute("timeNow", parse);
-
-//        log.error("Czas: "+timeNow);
-//        log.error("Data: "+ currentDate);
-        for ( Donation d:donations ){
-            log.error("czas z db: "+ d.getPickUpTime());
-        }
-
         return "userViews/userDonations";
     }
 
     @RequestMapping("/donations/collected")
-    public String viewAllCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user){
+    public String viewAllCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
-        List<Donation> donations = donationService.getAlreadyCollectedDonations(LocalDateTime.now(),user.getUser());
+        List<Donation> donations = donationService.getAlreadyCollectedDonations(LocalDateTime.now(), user.getUser());
         List<Donation> donationList = donations.stream().sorted(Comparator.comparing(Donation::getPickUpDate)).collect(Collectors.toList());
         model.addAttribute("allCollectedDonations", donationList);
         LocalDate currentDate = LocalDate.now();
@@ -103,9 +157,9 @@ public class UserController {
     }
 
     @RequestMapping("/donations/notcollected")
-    public String viewAllNotCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user){
+    public String viewAllNotCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
-        List<Donation> donations = donationService.getNotCollectedYetDonations(LocalDateTime.now(),user.getUser());
+        List<Donation> donations = donationService.getNotCollectedYetDonations(LocalDateTime.now(), user.getUser());
         List<Donation> donationList = donations.stream().sorted(Comparator.comparing(Donation::getCreatedOn)).collect(Collectors.toList());
         model.addAttribute("allNotCollectedDonations", donationList);
         LocalDate currentDate = LocalDate.now();
@@ -118,14 +172,14 @@ public class UserController {
     }
 
     @PostMapping("/donations/details/changeStatus")
-    public String changeDonationDetailsStatus(@ModelAttribute("statusDonation") Donation donation){
+    public String changeDonationDetailsStatus(@ModelAttribute("statusDonation") Donation donation) {
         Donation donation1 = donationService.getDonation(donation.getId()).orElseThrow(EntityNotFoundException::new);
-        if(donation.getStatus().equals("nieodebrany")){
+        if (donation.getStatus().equals("nieodebrany")) {
             LocalDateTime localDateTime = LocalDateTime.from(LocalDateTime.now().atZone(ZoneId.of("Europe/Warsaw"))).plusDays(2);
             donation.setPickUpDateTime(localDateTime);
             LocalDate localDate = localDateTime.toLocalDate();
             LocalTime localTime = localDateTime.toLocalTime();
-            log.error("New time: "+ localTime);
+            log.error("New time: " + localTime);
             donation.setPickUpDate(String.valueOf(localDate));
             donation.setPickUpTime(localTime);
             donation.setCreatedOn(donation1.getCreatedOn());
@@ -140,9 +194,8 @@ public class UserController {
         return "redirect:/user/donations";
     }
 
-
     @ModelAttribute("statusDonation")
-    public Donation updateStatusDonation(){
+    public Donation updateStatusDonation() {
         return new Donation();
     }
 

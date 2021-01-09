@@ -20,4 +20,6 @@ public interface UserService {
     void addRole(Long id, String role_change_password_privilege);
 
     void setNewPossword(User user, String password);
+
+    void updateUserPassword(User user, String password);
 }

@@ -33,8 +33,7 @@
       <div th:if="${(param.message)!=null}">
         <h2><span style="color: crimson" th:text="${param.message}"></span></h2>
       </div>
-      </div>
-      <div sec:authorize="isAuthenticated()">
+      <div sec:authorize ifAllGranted="ROLE_ADMIN,ROLE_USER">
         <h1>Jesteś zalogowany</h1>
       </div>
       <div th:if="${#authorization?.expression('isAnonymous()')}">

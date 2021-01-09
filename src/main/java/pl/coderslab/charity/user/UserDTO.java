@@ -1,23 +1,37 @@
 package pl.coderslab.charity.user;
 
-import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@AllArgsConstructor
 public class UserDTO {
 
     private String password;
 
+    private String passwordConfirmation;
+
     private String userEmail;
 
-    public UserDTO(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public UserDTO(String password, String userEmail){
-        this.password = password;
-        this.userEmail = userEmail;
-    }
+    private String currentUserPassword;
 
     public UserDTO() {
+    }
+
+    public String getCurrentUserPassword() {
+        return currentUserPassword;
+    }
+
+    public void setCurrentUserPassword(String currentUserPassword) {
+        this.currentUserPassword = currentUserPassword;
+    }
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
     }
 
     public String getUserEmail() {

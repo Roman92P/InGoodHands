@@ -94,6 +94,13 @@ public class JpaUserServiceImpl implements UserService {
         userRepository.save(userToUpdate);
     }
 
+    @Override
+    public void updateUserPassword(User user, String password) {
+        String encode = passwordEncoder.encode(password);
+        user.setPassword(encode);
+        userRepository.save(user);
+    }
+
 
     @Override
     public Optional<User> findByUserEmail(String email) {
@@ -121,6 +128,7 @@ public class JpaUserServiceImpl implements UserService {
             }
         }
         userRepository.save(user);
+
     }
 
     @Override
