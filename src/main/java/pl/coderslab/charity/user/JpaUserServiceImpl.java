@@ -83,6 +83,11 @@ public class JpaUserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public boolean checkIfUserNameExist(String userName) {
+        return userRepository.findByUserName(userName).isPresent();
+    }
+
 
     @Override
     public Optional<User> findByUserEmail(String email) {

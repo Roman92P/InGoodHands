@@ -15,4 +15,5 @@ public interface UserService {
     boolean activateUser(String code);
     void setNewPassword(User user, String password);
     void updateUserPassword(User user, String password);
+    boolean checkIfUserNameExist(String userName);
 }
