@@ -3,10 +3,7 @@ package pl.coderslab.charity.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.model.Institution;
 
@@ -24,13 +21,13 @@ public class AdminInstitutionController {
         this.institutionService = institutionService;
     }
 
-    @RequestMapping("/remove/{id}")
+    @GetMapping("/remove/{id}")
     public String deleteInstitution(@PathVariable Long id){
         institutionService.removeInstitution(institutionService.getInstitution(id).orElseThrow(EntityNotFoundException::new));
         return "redirect:/admin";
     }
 
-    @RequestMapping("/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editInstitution(@PathVariable Long id, Model model){
         Institution institution = institutionService.getInstitution(id).orElseThrow(EntityNotFoundException::new);
         model.addAttribute("institution", institution);
@@ -47,7 +44,7 @@ public class AdminInstitutionController {
         return institutionService.getAllInstitutions();
     }
 
-    @RequestMapping("/addInstitution")
+    @GetMapping("/addInstitution")
     public String addInstitution(Model model){
         model.addAttribute("institution", new Institution());
         return"adminViews/adminAddInstitution";

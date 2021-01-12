@@ -6,10 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.donation.DonationService;
 import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.model.Donation;
@@ -48,7 +45,7 @@ public class AdminController {
         this.roleRepository = roleRepository;
         this.messages = messages;
     }
-    @RequestMapping
+    @GetMapping
     public String getAdminPanel(){
         return "adminViews/admin";
     }
@@ -73,14 +70,14 @@ public class AdminController {
         return roleRepository.findAll();
     }
 
-    @RequestMapping("/adminList")
+    @GetMapping("/adminList")
     public String getAdminList(Model model){
         model.addAttribute("admins", userService.findAllAdmins());
         model.addAttribute("user", new User());
         return "adminViews/adminList";
     }
 
-    @RequestMapping("/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editAdminUser(@PathVariable Long id, Model model){
         User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
         model.addAttribute("user", user);
@@ -97,7 +94,7 @@ public class AdminController {
         return "redirect:/admin/adminList";
     }
 
-    @RequestMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteAdmin(@PathVariable Long id, Model model, Principal principal){
         String name = principal.getName();
         User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
@@ -111,7 +108,7 @@ public class AdminController {
         return "redirect:/admin/adminList";
     }
 
-    @RequestMapping("/addNewAdmin")
+    @GetMapping("/addNewAdmin")
     public String adminAddNewAdmin(Model model){
         User user = new User();
         model.addAttribute("newAdmin", user);

@@ -3,10 +3,7 @@ package pl.coderslab.charity.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.model.Role;
 import pl.coderslab.charity.model.User;
 import pl.coderslab.charity.user.RoleRepository;
@@ -39,7 +36,7 @@ public class AdminUserController {
         return roleRepository.findAll();
     }
 
-    @RequestMapping("/details/{id}")
+    @GetMapping("/details/{id}")
     public String showUserDetails(@PathVariable Long id, Model model){
         User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
         model.addAttribute("user", user);
@@ -54,7 +51,7 @@ public class AdminUserController {
         userService.updateUser(user);
         return "redirect:/admin";
     }
-    @RequestMapping("/addUser")
+    @GetMapping("/addUser")
     public String addUser(Model model){
         model.addAttribute("user", new User());
         return "adminViews/adminAddUser";
@@ -68,7 +65,7 @@ public class AdminUserController {
         userService.createUser(user);
         return "redirect:/admin";
     }
-    @RequestMapping("/addUser/delete/{id}")
+    @GetMapping("/addUser/delete/{id}")
     public String deleteUser(@PathVariable Long id, Model model, Principal principal){
         String name = principal.getName();
         User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);

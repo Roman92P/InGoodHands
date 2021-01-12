@@ -57,7 +57,7 @@ public class PasswordController {
         return new UserDTO();
     }
 
-    @RequestMapping
+    @GetMapping
     public String recallUserPassword(Model model) {
         model.addAttribute("user", new UserDTO());
         return "userViews/recallPasswordView";
@@ -92,7 +92,7 @@ public class PasswordController {
         return "redirect:/home";
     }
 
-    @RequestMapping("/newPassword")
+    @GetMapping("/newPassword")
     public String showChangePasswordPage(Locale locale, Model model,
                                          @RequestParam("token") String token, Authentication authentication) {
         String result = securityService.validatePasswordResetToken(token);
@@ -112,8 +112,7 @@ public class PasswordController {
         }
     }
 
-    //zmienić na GET
-    @RequestMapping("/updatePassword")
+    @GetMapping("/updatePassword")
     public String showPasswordChangeView(@RequestParam("token") String token, Principal principal, Model model) {
         User user= userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
         UserDTO userDTO = new UserDTO();

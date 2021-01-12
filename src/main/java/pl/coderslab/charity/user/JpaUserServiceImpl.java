@@ -43,7 +43,7 @@ public class JpaUserServiceImpl implements UserService {
         user.setActivationCode(UUID.randomUUID().toString());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEnabled(true);
+        user.setEnabled(false);
         if (user.getRoles().size()==0) {
             Role userRole = roleRepository.findByName("ROLE_USER");
             user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));

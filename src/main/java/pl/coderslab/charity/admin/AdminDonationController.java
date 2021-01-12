@@ -2,6 +2,7 @@ package pl.coderslab.charity.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class AdminDonationController {
         return  donationService.getAllDonations();
     }
 
-    @RequestMapping("/details/{id}")
+    @GetMapping("/details/{id}")
     public String getDetailsOfDonation(@PathVariable Long id, Model model){
         model.addAttribute("donation", donationService.getDonation(id).orElseThrow(EntityNotFoundException::new));
         return "adminViews/donationDetails";

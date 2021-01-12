@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +56,7 @@ public class UserController {
         this.userPasswordValidator = userPasswordValidator;
     }
 
-    @RequestMapping("/profile")
+    @GetMapping("/profile")
     public String getUserProfile(Principal principal, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         String name = principal.getName();
         User byUserName = userService.findByUserName(name).orElseThrow(EntityNotFoundException::new);
@@ -63,8 +64,7 @@ public class UserController {
         return "userViews/userProfile";
     }
 
-    //dodać metodę
-    @RequestMapping("/profile/changePassword")
+    @GetMapping("/profile/changePassword")
     public String userChangeCurrentPassword(Model model, Principal principal) {
         User user = userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
         UserDTO userDTO = new UserDTO();
@@ -125,7 +125,7 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
-    @RequestMapping("/donations")
+    @GetMapping("/donations")
     public String viewAllUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
         List<Donation> donations = donationService.usersDonations(id);
@@ -140,7 +140,7 @@ public class UserController {
         return "userViews/userDonations";
     }
 
-    @RequestMapping("/donations/collected")
+    @GetMapping("/donations/collected")
     public String viewAllCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
         List<Donation> donations = donationService.getAlreadyCollectedDonations(LocalDateTime.now(), user.getUser());
@@ -155,7 +155,7 @@ public class UserController {
         return "userViews/userCollectedDonations";
     }
 
-    @RequestMapping("/donations/notcollected")
+    @GetMapping("/donations/notcollected")
     public String viewAllNotCollectedUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
         Long id = user.getUser().getId();
         List<Donation> donations = donationService.getNotCollectedYetDonations(LocalDateTime.now(), user.getUser());

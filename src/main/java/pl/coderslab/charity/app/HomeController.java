@@ -31,23 +31,13 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String home(){
         return "redirect:/home";
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     public String permitAllView(){
-        return "login";
-    }
-// poniżej filter zamiast post
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login( CurrentUser currentUser, Model model) {
-        User user = currentUser.getUser();
-        if (user.isEnabled()) {
-            return "redirect:/donations";
-        }
-        model.addAttribute("noActiveUser", "User is not activated. Check your email!");
         return "login";
     }
 
@@ -62,7 +52,7 @@ public class HomeController {
         return "login";
     }
 
-    @RequestMapping("/home")
+    @GetMapping("/home")
     public String homeAction(Model model){
         return "index";
     }
