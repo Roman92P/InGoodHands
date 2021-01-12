@@ -10,7 +10,6 @@ public class Institution {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "institution_id")
     private Long id;
 
     @Column(name = "institution_name")

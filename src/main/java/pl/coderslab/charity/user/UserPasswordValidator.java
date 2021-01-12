@@ -7,12 +7,12 @@ import pl.coderslab.charity.model.User;
 import javax.persistence.EntityNotFoundException;
 
 @Service
-public class UserDTOService {
+public class UserPasswordValidator {
 
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserDTOService(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+    public UserPasswordValidator(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
     Optional<User> findByUserName(String name);
-    boolean saveUser(User user);
+    boolean createUser(User user);
     Optional<User> findByUserEmail(String email);
     List<User> getAllUsers();
     Optional<User> getUserById(Long id);
@@ -15,11 +15,6 @@ public interface UserService {
     void deleteUser(User user);
     List<User> findAllAdmins();
     boolean activateUser(String code);
-    Optional<User> findByActivationCode(String code);
-
-    void addRole(Long id, String role_change_password_privilege);
-
-    void setNewPossword(User user, String password);
-
+    void setNewPassword(User user, String password);
     void updateUserPassword(User user, String password);
 }

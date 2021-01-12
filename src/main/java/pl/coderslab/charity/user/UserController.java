@@ -21,9 +21,7 @@ import pl.coderslab.charity.model.Donation;
 import pl.coderslab.charity.model.User;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import java.security.Principal;
@@ -47,14 +45,14 @@ public class UserController {
     private final UserService userService;
     private final DonationService donationService;
     private final MessageSource messageSource;
-    private final UserDTOService userDTOService;
+    private final UserPasswordValidator userPasswordValidator;
 
 
-    public UserController(UserService userService, SpringDataUserDetailsService springDataUserDetailsService, DonationService donationService, MessageSource messageSource, UserDTOService userDTOService) {
+    public UserController(UserService userService, SpringDataUserDetailsService springDataUserDetailsService, DonationService donationService, MessageSource messageSource, UserPasswordValidator userPasswordValidator) {
         this.userService = userService;
         this.donationService = donationService;
         this.messageSource = messageSource;
-        this.userDTOService = userDTOService;
+        this.userPasswordValidator = userPasswordValidator;
     }
 
     @RequestMapping("/profile")
@@ -65,6 +63,7 @@ public class UserController {
         return "userViews/userProfile";
     }
 
+    //dodać metodę
     @RequestMapping("/profile/changePassword")
     public String userChangeCurrentPassword(Model model, Principal principal) {
         User user = userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
@@ -76,8 +75,8 @@ public class UserController {
 
     @PostMapping("/profile/changePassword")
     public String userChangeCurrentPassword(UserDTO userDTO, Locale locale, Model model) {
-        String result = userDTOService.validatePasswordMatch(userDTO);
-        String result1 = userDTOService.validateCurrentUserPassword(userDTO);
+        String result = userPasswordValidator.validatePasswordMatch(userDTO);
+        String result1 = userPasswordValidator.validateCurrentUserPassword(userDTO);
         if (result != null) {
             String message1 = messageSource.getMessage("password.matches." + result, null, locale);
             return "redirect:/user/profile/changePassword?lang=" + locale.getLanguage() + "&message1=" + message1;

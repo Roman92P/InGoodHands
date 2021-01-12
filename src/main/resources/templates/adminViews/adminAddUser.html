@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </head>
 <body>
 <header class="header--form-page">
@@ -13,7 +18,7 @@
 </header>
 <section class="login-page">
     <h2>Dodaj użytkownika</h2>
-    <form th:action="@{/admin/addUser}" th:object="${user}" method="post">
+    <form th:action="@{/admin/user/addUser}" th:object="${user}" method="post">
         <div class="form-group">
             <label th:for="*{userEmail}">
                 <input type="email" name="email" placeholder="Email" th:field="*{userEmail}"/>
@@ -42,6 +47,9 @@
         </div>
         <div class="form-group form-group--buttons">
             <button id="loginButton" class="btn" type="submit" style="display: none">Załóż konto</button>
+        </div>
+        <div class="form-group form-group--buttons">
+            <button onclick="goBack()"  class="btn">Powrót</button>
         </div>
         <ul th:if="${#fields.hasErrors('*')}" style="color: crimson; size: landscape">
             <li class="text-danger" th:each="err : ${#fields.errors('*')}"

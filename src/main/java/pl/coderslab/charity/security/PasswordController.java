@@ -20,7 +20,7 @@ import pl.coderslab.charity.model.User;
 import pl.coderslab.charity.passwordResetToken.PasswordResetTokenService;
 import pl.coderslab.charity.user.SpringDataUserDetailsService;
 import pl.coderslab.charity.user.UserDTO;
-import pl.coderslab.charity.user.UserDTOService;
+import pl.coderslab.charity.user.UserPasswordValidator;
 import pl.coderslab.charity.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
@@ -41,15 +41,15 @@ public class PasswordController {
     private final PasswordResetTokenService passwordResetTokenService;
     private final SecurityService securityService;
     private final MessageSource messages;
-    private final UserDTOService userDTOService;
+    private final UserPasswordValidator userPasswordValidator;
 
-    public PasswordController(SpringDataUserDetailsService userDetailsService, UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, @Qualifier("messageSource") MessageSource messages, UserDTOService userDTOService) {
+    public PasswordController(SpringDataUserDetailsService userDetailsService, UserService userService, PasswordResetTokenService passwordResetTokenService, SecurityService securityService, @Qualifier("messageSource") MessageSource messages, UserPasswordValidator userPasswordValidator) {
         this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.passwordResetTokenService = passwordResetTokenService;
         this.securityService = securityService;
         this.messages = messages;
-        this.userDTOService = userDTOService;
+        this.userPasswordValidator = userPasswordValidator;
     }
 
     @ModelAttribute("user")
@@ -112,6 +112,7 @@ public class PasswordController {
         }
     }
 
+    //zmienić na GET
     @RequestMapping("/updatePassword")
     public String showPasswordChangeView(@RequestParam("token") String token, Principal principal, Model model) {
         User user= userService.findByUserName(principal.getName()).orElseThrow(EntityNotFoundException::new);
@@ -127,7 +128,7 @@ public class PasswordController {
     public String updateUserPassword(@ModelAttribute("user") UserDTO userDTO, @PathVariable String token ,
                                      Model model, Locale locale, Authentication authentication){
 
-        String s = userDTOService.validatePasswordMatch(userDTO);
+        String s = userPasswordValidator.validatePasswordMatch(userDTO);
         if(s != null){
             String message = messages.getMessage("password.matches"+s,null, locale);
             return "redirect:/recallPassword/updatePassword?lang="+locale.getLanguage()+"&token="+token+
@@ -144,7 +145,7 @@ public class PasswordController {
             model.addAttribute("emptyToken", "Nie ma takiego tokenu");
             return "login";
         }
-        userService.setNewPossword(user,userDTO.getPassword());
+        userService.setNewPassword(user,userDTO.getPassword());
         authentication.setAuthenticated(false);
         model.addAttribute("successPasswordUpdate", "Hasło zostało pomyślnie zmienione");
         return "login";

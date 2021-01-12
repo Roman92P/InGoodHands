@@ -33,7 +33,7 @@ public class JpaUserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean saveUser(User user) {
+    public boolean createUser(User user) {
 
         Optional<User> byUserName = userRepository.findByUserName(user.getUserName());
         if(byUserName.isPresent()){
@@ -72,23 +72,7 @@ public class JpaUserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByActivationCode(String code) {
-        return userRepository.findByActivationCode(code);
-    }
-
-    @Override
-    public void addRole(Long id, String role_change_password_privilege) {
-        Optional<User> byId = userRepository.findById(id);
-        if(byId.isPresent()){
-            User user = byId.get();
-            Set<Role> roles = user.getRoles();
-            roles.add(roleRepository.findByName(role_change_password_privilege));
-            userRepository.save(user);
-        }
-    }
-
-    @Override
-    public void setNewPossword(User user, String password) {
+    public void setNewPassword(User user, String password) {
         User userToUpdate = userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
         userToUpdate.setPassword(passwordEncoder.encode(password));
         userRepository.save(userToUpdate);

@@ -12,35 +12,21 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Component
 public class DonationDTO {
-//0
-    private Long id;
-//    1
-    private int quantity;
-//    2
-    private String userName;
-//    3
-    private String institutionName;
-//    4
-    private String street;
-//    5
-    private String city;
-//    6
-    private String zipCode;
-//    7
-    private String pickUpDate;
-//    8
-    private String pickUpTime;
-//    9
-    private String pickUpComment;
-//    10
-    private String phoneNumber;
-//    11
-    private String createdOn;
-//    12
-    private Long userId;
 
+    private Long id;
+    private int quantity;
+    private String userName;
+    private String institutionName;
+    private String street;
+    private String city;
+    private String zipCode;
+    private String pickUpDate;
+    private String pickUpTime;
+    private String pickUpComment;
+    private String phoneNumber;
+    private String createdOn;
+    private Long userId;
     public DonationDTO() {
     }
 }

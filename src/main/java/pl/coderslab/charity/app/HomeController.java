@@ -40,7 +40,7 @@ public class HomeController {
     public String permitAllView(){
         return "login";
     }
-
+// poniżej filter zamiast post
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login( CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();

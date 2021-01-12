@@ -22,8 +22,4 @@ public class JpaPasswordResetTokenImpl implements PasswordResetTokenService{
         return passwordResetTokenRepository.findByToken(token);
     }
 
-    @Override
-    public void updatePasswordResetToken(PasswordResetToken passwordResetToken) {
-        passwordResetTokenRepository.save(passwordResetToken);
-    }
 }

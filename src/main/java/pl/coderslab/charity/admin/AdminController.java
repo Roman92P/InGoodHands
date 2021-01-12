@@ -48,7 +48,6 @@ public class AdminController {
         this.roleRepository = roleRepository;
         this.messages = messages;
     }
-
     @RequestMapping
     public String getAdminPanel(){
         return "adminViews/admin";
@@ -69,95 +68,9 @@ public class AdminController {
         return  donationService.getAllDonations();
     }
 
-
-    @RequestMapping("/institution/remove/{id}")
-    public String deleteInstitution(@PathVariable Long id){
-        institutionService.removeInstitution(institutionService.getInstitution(id).orElseThrow(EntityNotFoundException::new));
-        return "redirect:/admin";
-    }
-
-    @RequestMapping("/institution/edit/{id}")
-    public String editInstitution(@PathVariable Long id, Model model){
-        Institution institution = institutionService.getInstitution(id).orElseThrow(EntityNotFoundException::new);
-        model.addAttribute("institution", institution);
-        return"adminViews/editInstitution";
-    }
-
-    @PostMapping("/institution/edit")
-    public String editIstitution(Institution institution){
-        institutionService.updateteInstitution(institution);
-        return "redirect:/admin";
-    }
-
-    @RequestMapping("/user/details/{id}")
-    public String showUserDetails(@PathVariable Long id, Model model){
-        User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
-        model.addAttribute("user", user);
-        return "adminViews/userDetails";
-    }
-
-    @PostMapping("/user/edit")
-    public String editUser(@Valid User user, BindingResult result){
-        if(result.hasErrors()){
-            return "redirect:/admin/user/details/"+user.getId();
-        }
-        userService.updateUser(user);
-        return "redirect:/admin";
-    }
-
     @ModelAttribute("allRoles")
     public List<Role>allAvailableRoles(){
         return roleRepository.findAll();
-    }
-
-    @RequestMapping("/donation/details/{id}")
-    public String getDetailsOfDonation(@PathVariable Long id, Model model){
-        model.addAttribute("donation", donationService.getDonation(id).orElseThrow(EntityNotFoundException::new));
-        return "adminViews/donationDetails";
-    }
-
-    @RequestMapping("/addUser")
-    public String addUser(Model model){
-        model.addAttribute("user", new User());
-        return "adminViews/adminAddUser";
-    }
-
-    @PostMapping("/addUser")
-    public String addUser(@Valid User user, BindingResult result ){
-        if(result.hasErrors()){
-            return "adminViews/adminAddUser";
-        }
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
-
-    @RequestMapping("/addInstitution")
-    public String addInstitution(Model model){
-        model.addAttribute("institution", new Institution());
-        return"adminViews/adminAddInstitution";
-    }
-
-    @PostMapping("/addInstitution")
-    public String addInstitution(@Valid Institution institution, BindingResult result){
-        if(result.hasErrors()){
-            return "adminViews/adminAddInstitution";
-        }
-        institutionService.addInstitution(institution);
-        return "redirect:/admin";
-    }
-
-    @RequestMapping("/addUser/delete/{id}")
-    public String deleteUser(@PathVariable Long id, Model model, Principal principal){
-        String name = principal.getName();
-        User user = userService.getUserById(id).orElseThrow(EntityNotFoundException::new);
-        String userName = user.getUserName();
-        if(userName.equals(name)||userName.equals("Admin")){
-            model.addAttribute("userDeleteMessage", "You cann't delete Admin or current logged user");
-            model.addAttribute("user", user);
-            return "adminViews/userDetails";
-        }
-        userService.deleteUser(user);
-        return "redirect:/admin";
     }
 
     @RequestMapping("/adminList")
@@ -220,7 +133,7 @@ public class AdminController {
         Role role_admin = roleRepository.findByName("ROLE_ADMIN");
         userRoles.add(role_admin);
         user.setRoles(userRoles);
-        userService.saveUser(user);
+        userService.createUser(user);
         return "redirect:/admin/adminList";
     }
 }

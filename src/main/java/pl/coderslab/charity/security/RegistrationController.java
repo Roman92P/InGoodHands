@@ -12,7 +12,6 @@ import pl.coderslab.charity.user.UserService;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
-import java.util.Locale;
 
 @Controller
 @RequestMapping("/register")
@@ -36,7 +35,7 @@ public class RegistrationController {
         if (result.hasErrors()) {
             return "register";
         }
-        userService.saveUser(user);
+        userService.createUser(user);
         model.addAttribute("successEmail", "Email with atctivation has been sent! Check your email.");
         return "login";
     }

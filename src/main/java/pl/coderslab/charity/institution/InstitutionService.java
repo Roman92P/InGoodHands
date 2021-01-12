@@ -9,6 +9,6 @@ public interface InstitutionService {
     Optional<Institution> getInstitution(Long id);
     void addInstitution(Institution institution);
     List<Institution> getAllInstitutions();
-    void updateteInstitution(Institution institution);
+    void updateInstitution(Institution institution);
     void removeInstitution(Institution institution);
 }

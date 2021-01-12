@@ -18,10 +18,13 @@ public class SecurityService {
 
     public String validatePasswordResetToken(String token) {
         final PasswordResetToken passToken = passwordResetTokenService.findByToken(token);
-
-        return !isTokenFound(passToken) ? "invalidToken"
-                : isTokenExpired(passToken) ? "expired"
-                : null;
+        if (!isTokenFound(passToken)) {
+            return "invalidToken";
+        }
+        if (isTokenExpired(passToken)) {
+            return "expired";
+        }
+        return null;
     }
 
     private boolean isTokenFound(PasswordResetToken passToken) {

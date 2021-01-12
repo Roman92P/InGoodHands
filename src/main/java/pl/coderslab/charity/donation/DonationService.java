@@ -14,16 +14,9 @@ public interface DonationService {
     void addDonation(Donation donation);
     List<Donation> getAllDonations();
     void updateDonation(Donation donation);
-    void removeDonation(Donation donation);
     Optional<Integer> getSumOfBags();
     Optional<Integer> getSumOfDonations();
     List<Donation>usersDonations(Long id);
-    List<Donation>usersNotCollected( Long id,LocalDate day,LocalDate day1, LocalTime time);
-    List<Donation>usersCollected( Long id, LocalDate day,LocalDate day1, LocalTime time);
-
-    List<Object[]>findAllUserCollectedDonations(LocalDateTime nowDateTime, Long userId);
-    List<Object[]>findAllUserNotCollectedDonations(LocalDateTime nowDateTime, Long userId);
-
     List<Donation>getAlreadyCollectedDonations(LocalDateTime currentDate, User user);
     List<Donation>getNotCollectedYetDonations(LocalDateTime currentDate, User user);
 }

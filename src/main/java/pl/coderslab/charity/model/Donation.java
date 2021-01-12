@@ -17,7 +17,6 @@ public class Donation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "donation_id")
     private Long id;
 
     @Column(name = "status")
@@ -193,7 +192,6 @@ public class Donation {
     public void setPickUpDate(String pickUpDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         this.pickUpDate = LocalDate.parse(pickUpDate, formatter);
-//        this.pickUpDate = pickUpDate;
     }
 
     public LocalTime getPickUpTime() {

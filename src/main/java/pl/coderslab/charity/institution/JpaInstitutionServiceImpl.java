@@ -31,7 +31,7 @@ public class JpaInstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
-    public void updateteInstitution(Institution institution) {
+    public void updateInstitution(Institution institution) {
         institutionRepository.save(institution);
     }
 
