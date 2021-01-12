@@ -1,7 +1,5 @@
 package pl.coderslab.charity.institution;
 
-import pl.coderslab.charity.model.Institution;
-
 import java.util.List;
 import java.util.Optional;
 

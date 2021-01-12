@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.donation.DonationService;
-import pl.coderslab.charity.model.Donation;
-import pl.coderslab.charity.model.User;
+import pl.coderslab.charity.donation.Donation;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;

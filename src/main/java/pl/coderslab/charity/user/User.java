@@ -1,8 +1,9 @@
-package pl.coderslab.charity.model;
+package pl.coderslab.charity.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import pl.coderslab.charity.donation.Donation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

@@ -1,7 +1,6 @@
 package pl.coderslab.charity.passwordResetToken;
 
 import org.springframework.stereotype.Service;
-import pl.coderslab.charity.model.PasswordResetToken;
 
 @Service
 public class JpaPasswordResetTokenImpl implements PasswordResetTokenService{

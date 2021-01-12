@@ -1,7 +1,7 @@
 package pl.coderslab.charity.security;
 
 import org.springframework.stereotype.Service;
-import pl.coderslab.charity.model.PasswordResetToken;
+import pl.coderslab.charity.passwordResetToken.PasswordResetToken;
 import pl.coderslab.charity.passwordResetToken.PasswordResetTokenService;
 
 import java.util.Calendar;

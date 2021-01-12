@@ -1,8 +1,9 @@
-package pl.coderslab.charity.model;
+package pl.coderslab.charity.passwordResetToken;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import pl.coderslab.charity.user.User;
 
 import javax.persistence.*;
 import java.util.Calendar;

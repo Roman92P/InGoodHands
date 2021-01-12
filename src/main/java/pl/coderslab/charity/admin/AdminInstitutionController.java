@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.institution.InstitutionService;
-import pl.coderslab.charity.model.Institution;
+import pl.coderslab.charity.institution.Institution;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;

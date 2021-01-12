@@ -1,8 +1,7 @@
 package pl.coderslab.charity.donation;
 
 import org.springframework.stereotype.Service;
-import pl.coderslab.charity.model.Donation;
-import pl.coderslab.charity.model.User;
+import pl.coderslab.charity.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

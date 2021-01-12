@@ -1,6 +1,8 @@
-package pl.coderslab.charity.model;
+package pl.coderslab.charity.donation;
 
 import lombok.AllArgsConstructor;
+import pl.coderslab.charity.institution.Institution;
+import pl.coderslab.charity.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;

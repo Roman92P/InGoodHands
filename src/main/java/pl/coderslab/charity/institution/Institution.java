@@ -1,7 +1,8 @@
-package pl.coderslab.charity.model;
+package pl.coderslab.charity.institution;
+
+import pl.coderslab.charity.donation.Donation;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity

@@ -1,11 +1,8 @@
 package pl.coderslab.charity.donation;
 
-import pl.coderslab.charity.model.Donation;
-import pl.coderslab.charity.model.User;
+import pl.coderslab.charity.user.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 

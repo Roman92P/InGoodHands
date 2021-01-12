@@ -8,11 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.category.CategoryService;
 import pl.coderslab.charity.institution.InstitutionService;
-import pl.coderslab.charity.model.Category;
-import pl.coderslab.charity.model.Donation;
-import pl.coderslab.charity.model.Institution;
+import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.user.CurrentUser;
-import pl.coderslab.charity.user.UserService;
 
 import java.util.List;
 

@@ -2,7 +2,6 @@ package pl.coderslab.charity.user;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.coderslab.charity.model.User;
 
 import javax.persistence.EntityNotFoundException;
 

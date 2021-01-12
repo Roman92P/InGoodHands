@@ -1,4 +1,4 @@
-package pl.coderslab.charity.model;
+package pl.coderslab.charity.user;
 
 import javax.persistence.*;
 

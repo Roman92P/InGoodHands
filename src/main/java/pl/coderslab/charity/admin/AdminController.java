@@ -9,10 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.donation.DonationService;
 import pl.coderslab.charity.institution.InstitutionService;
-import pl.coderslab.charity.model.Donation;
-import pl.coderslab.charity.model.Institution;
-import pl.coderslab.charity.model.Role;
-import pl.coderslab.charity.model.User;
+import pl.coderslab.charity.donation.Donation;
+import pl.coderslab.charity.institution.Institution;
+import pl.coderslab.charity.user.Role;
+import pl.coderslab.charity.user.User;
 import pl.coderslab.charity.user.RoleRepository;
 import pl.coderslab.charity.user.UserService;
 

@@ -1,7 +1,5 @@
 package pl.coderslab.charity.user;
 
-import pl.coderslab.charity.model.User;
-
 import java.util.List;
 import java.util.Optional;
 

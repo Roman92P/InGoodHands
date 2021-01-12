@@ -5,8 +5,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.coderslab.charity.email.EmailService;
-import pl.coderslab.charity.model.Role;
-import pl.coderslab.charity.model.User;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
