@@ -57,7 +57,7 @@ public class PasswordController {
         return new UserDTO();
     }
 
-    @GetMapping
+    @RequestMapping
     public String recallUserPassword(Model model) {
         model.addAttribute("user", new UserDTO());
         return "userViews/recallPasswordView";

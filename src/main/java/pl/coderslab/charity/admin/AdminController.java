@@ -45,7 +45,7 @@ public class AdminController {
         this.roleRepository = roleRepository;
         this.messages = messages;
     }
-    @GetMapping
+    @RequestMapping
     public String getAdminPanel(){
         return "adminViews/admin";
     }

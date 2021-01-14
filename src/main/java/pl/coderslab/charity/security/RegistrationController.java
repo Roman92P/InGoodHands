@@ -30,7 +30,7 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @RequestMapping
     public String getRegistrationView() {
         return "register";
     }

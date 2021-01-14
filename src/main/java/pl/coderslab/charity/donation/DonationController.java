@@ -27,7 +27,7 @@ public class DonationController {
         this.donationService = donationService;
     }
 
-    @GetMapping
+    @RequestMapping
     public String getDonationForm(){
         return "donationViews/form";
     }

@@ -29,12 +29,12 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @RequestMapping("/")
     public String home(){
         return "redirect:/home";
     }
 
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String permitAllView(){
         return "login";
     }
@@ -50,7 +50,7 @@ public class HomeController {
         return "login";
     }
 
-    @GetMapping("/home")
+    @RequestMapping("/home")
     public String homeAction(Model model){
         return "index";
     }
